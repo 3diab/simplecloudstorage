@@ -1,0 +1,26 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-simplecloudstorage-staging-93602-authRole",
+      "UnauthRoleArn": "arn:aws:iam::150450947532:role/amplify-simplecloudstorage-staging-93602-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::150450947532:role/amplify-simplecloudstorage-staging-93602-authRole",
+      "Region": "eu-north-1",
+      "DeploymentBucketName": "amplify-simplecloudstorage-staging-93602-deployment",
+      "UnauthRoleName": "amplify-simplecloudstorage-staging-93602-unauthRole",
+      "StackName": "amplify-simplecloudstorage-staging-93602",
+      "StackId": "arn:aws:cloudformation:eu-north-1:150450947532:stack/amplify-simplecloudstorage-staging-93602/f55a3c80-3ee4-11ec-9d5a-0a36c8ddc2aa",
+      "AmplifyAppId": "df13rfp36ndmu"
+    },
+    "categories": {
+      "auth": {
+        "SimpleCloudStorage": {}
+      },
+      "function": {
+        "S3Trigger430ffe51": {
+          "deploymentBucketName": "amplify-simplecloudstorage-staging-93602-deployment",
+          "s3Key": "amplify-builds/S3Trigger430ffe51-383042584d6b696c4230-build.zip"
+        }
+      }
+    }
+  }
+}
