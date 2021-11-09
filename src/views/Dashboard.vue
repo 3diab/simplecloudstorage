@@ -1,12 +1,72 @@
 <template>
-  <div>Dashboard</div>
+  <v-app>
+    <v-navigation-drawer app color="grey lighten-5" floating>
+      <v-container>
+        <v-row justify="center" no-gutters>
+          <v-col>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title
+                  class="font-weight-light text-h5 text-center"
+                >
+                  Simple <span class="font-weight-medium">Files</span>
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+
+            <v-btn
+              dark
+              block
+              depressed
+              color="black"
+              class="text-none font-weight-light mt-5 text-h6 py-6"
+            >
+              <v-icon class="mr-2">mdi-plus</v-icon> Create New</v-btn
+            >
+
+            <v-list nav>
+              <v-list-item v-for="item in mainMenuItems" :key="item.title" link>
+                <v-list-item-icon>
+                  <v-icon>{{ item.icon }}</v-icon>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                  <v-list-item-title
+                    class="font-weight-regular text-subtitle-1"
+                    >{{ item.title }}</v-list-item-title
+                  >
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-navigation-drawer>
+
+    <!-- Sizes your content based upon application components -->
+    <v-main>
+      <!-- Provides the application the proper gutter -->
+      <v-container fluid>
+        <!-- If using vue-router -->
+        <router-view></router-view>
+      </v-container>
+    </v-main>
+
+    <v-footer app>
+      <!-- -->
+    </v-footer>
+  </v-app>
 </template>
 <script lang="ts">
 import Vue from "vue";
 export default Vue.extend({
   name: "Dashboard",
   data: () => ({
-    //
+    mainMenuItems: [
+      { title: "My Files", icon: "mdi-folder" },
+      { title: "Trash", icon: "mdi-trash-can" },
+      { title: "About", icon: "mdi-help-box" },
+    ],
   }),
 });
 </script>
