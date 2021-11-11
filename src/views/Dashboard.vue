@@ -18,7 +18,7 @@
               dark
               block
               depressed
-              color="black"
+              color="blue"
               class="text-none font-weight-light mt-5 text-h6 py-6"
             >
               <v-icon class="mr-2">mdi-plus</v-icon> Create New</v-btn
@@ -42,6 +42,10 @@
         </v-row>
       </v-container>
     </v-navigation-drawer>
+    <v-app-bar app flat color="white">
+      <v-app-bar-nav-icon></v-app-bar-nav-icon>
+      <v-toolbar-title>Welcome</v-toolbar-title>
+    </v-app-bar>
 
     <!-- Sizes your content based upon application components -->
     <v-main>
