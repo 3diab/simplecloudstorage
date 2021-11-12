@@ -206,6 +206,8 @@ interface UserCredentials {
   permanentPassword: string;
 }
 
+type VForm = Vue & { validate: () => boolean };
+
 type AuthAction = "SignIn" | "SignUp";
 
 export default Vue.extend({
@@ -245,22 +247,19 @@ export default Vue.extend({
   }),
   methods: {
     validateSignIn() {
-      if (
-        (this.$refs.signInForm as Vue & { validate: () => boolean }).validate()
-      ) {
+      if ((this.$refs.signInForm as VForm).validate()) {
         console.log("Initiating Signing");
       }
     },
     validateSignUp() {
-      if (
-        (this.$refs.signUpForm as Vue & { validate: () => boolean }).validate()
-      ) {
+      if ((this.$refs.signUpForm as VForm).validate()) {
         console.log("Initiating Signing");
       }
     },
     changeAuthAction(authAction: AuthAction) {
       this.authAction = authAction;
     },
+    //async signIn() {},
   },
 });
 </script>
