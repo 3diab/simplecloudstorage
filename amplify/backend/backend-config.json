@@ -6,16 +6,16 @@
       "dependsOn": [],
       "customAuth": false,
       "frontendAuthConfig": {
-        "loginMechanisms": [
+        "socialProviders": [],
+        "usernameAttributes": [
           "EMAIL"
         ],
         "signupAttributes": [
           "EMAIL",
-          "NAME",
-          "PICTURE"
+          "PREFERRED_USERNAME"
         ],
         "passwordProtectionSettings": {
-          "passwordPolicyMinLength": 8,
+          "passwordPolicyMinLength": 6,
           "passwordPolicyCharacters": [
             "REQUIRES_LOWERCASE",
             "REQUIRES_NUMBERS",

@@ -1,7 +1,7 @@
 {
     "identityPoolName": "testAuthIdentityPool",
-    "allowUnauthenticatedIdentities": true,
-    "resourceNameTruncated": "simple5b05785b",
+    "allowUnauthenticatedIdentities": false,
+    "resourceNameTruncated": "simple81980de9",
     "userPoolName": "SimpleCloudStorage",
     "autoVerifiedAttributes": [
         "email"
@@ -15,7 +15,7 @@
     "emailVerificationSubject": "Forgot password code: {####}",
     "emailVerificationMessage": "Forgot password code: {####}",
     "defaultPasswordPolicy": false,
-    "passwordPolicyMinLength": 8,
+    "passwordPolicyMinLength": 6,
     "passwordPolicyCharacters": [
         "Requires Lowercase",
         "Requires Numbers",
@@ -24,17 +24,16 @@
     ],
     "requiredAttributes": [
         "email",
-        "name",
-        "picture"
+        "preferred_username"
     ],
     "aliasAttributes": [],
     "userpoolClientGenerateSecret": false,
     "userpoolClientRefreshTokenValidity": 30,
     "userpoolClientWriteAttributes": [],
     "userpoolClientReadAttributes": [],
-    "userpoolClientLambdaRole": "Simple5b05785b_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "Simple81980de9_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "5b05785b",
+    "sharedId": "81980de9",
     "resourceName": "SimpleCloudStorage",
     "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
@@ -60,5 +59,6 @@
     "thirdPartyAuth": false,
     "authProviders": [],
     "usernameCaseSensitive": false,
+    "useEnabledMfas": false,
     "dependsOn": []
 }
