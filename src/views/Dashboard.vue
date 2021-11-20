@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-navigation-drawer app color="grey lighten-5" floating>
+    <v-navigation-drawer app floating>
       <v-container>
         <v-row justify="center" no-gutters>
           <v-col>
@@ -14,18 +14,15 @@
               </v-list-item-content>
             </v-list-item>
 
-            <v-btn
-              dark
-              block
-              depressed
-              color="blue"
-              class="text-none font-weight-light mt-5 text-h6 py-6"
-            >
-              <v-icon class="mr-2">mdi-plus</v-icon> Create New</v-btn
-            >
+            <v-divider></v-divider>
 
             <v-list nav>
-              <v-list-item v-for="item in mainMenuItems" :key="item.title" link>
+              <v-list-item
+                v-for="item in mainMenuItems"
+                :key="item.title"
+                link
+                :to="item.to"
+              >
                 <v-list-item-icon>
                   <v-icon>{{ item.icon }}</v-icon>
                 </v-list-item-icon>
@@ -49,18 +46,35 @@
         </div>
       </template>
     </v-navigation-drawer>
-    <v-app-bar app flat color="white">
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
-      <v-toolbar-title
-        >Welcome, {{ $store.getters["User/getUserEmail"] }}</v-toolbar-title
+    <v-app-bar app flat color="transparent">
+      <v-app-bar-title class="grey--text text--darken-1 text-subtitle-1"
+        >Welcome,
+        <span class="grey--text text--darken-4 font-weight-bold">
+          {{ $store.getters["User/getUserName"] }}</span
+        ></v-app-bar-title
       >
+
+      <v-container class="mx-6">
+        <v-row>
+          <v-col cols="8">
+            <v-spacer></v-spacer>
+            <v-text-field
+              solo
+              label="Search"
+              flat
+              hide-details
+              background-color="white"
+              prepend-inner-icon="mdi-magnify"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+      </v-container>
     </v-app-bar>
 
     <!-- Sizes your content based upon application components -->
     <v-main>
       <!-- Provides the application the proper gutter -->
       <v-container fluid>
-        <!-- If using vue-router -->
         <router-view></router-view>
       </v-container>
     </v-main>
@@ -76,7 +90,7 @@ export default Vue.extend({
   name: "Dashboard",
   data: () => ({
     mainMenuItems: [
-      { title: "My Files", icon: "mdi-folder" },
+      { title: "My Files", icon: "mdi-folder", to: { name: "Browser" } },
       { title: "Trash", icon: "mdi-trash-can" },
       { title: "About", icon: "mdi-help-box" },
     ],
@@ -88,3 +102,14 @@ export default Vue.extend({
   },
 });
 </script>
+<style>
+.v-bar-border {
+  background-color: red;
+  border-width: 0 0 thin 0;
+  border-style: solid;
+  border-bottom-color: #0000001f !important;
+}
+.v-application {
+  background-color: #e9e9e9 !important;
+}
+</style>

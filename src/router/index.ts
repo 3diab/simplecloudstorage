@@ -5,16 +5,24 @@ import Login from "../views/Login.vue";
 import Dashboard from "../views/Dashboard.vue";
 import store from "@/store";
 
+import FileBrowser from "../components/FileBrowser.vue";
+
 Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
   {
     path: "/",
-    name: "Dashboard",
     component: Dashboard,
     meta: {
       requiresAuth: true,
     },
+    children: [
+      {
+        path: "/",
+        name: "Browser",
+        component: FileBrowser,
+      },
+    ],
   },
   {
     path: "/login",

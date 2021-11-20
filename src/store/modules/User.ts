@@ -119,6 +119,14 @@ const getters: GetterTree<State, unknown> = {
       return "No User";
     }
   },
+  getUserName: (state) => {
+    if (state.authenticatedUser) {
+      const userEmail = state.authenticatedUser["attributes"].email;
+      return userEmail.split("@")[0];
+    } else {
+      return "No User";
+    }
+  },
 
   getSignInError: (state) => {
     return state.signInError;
