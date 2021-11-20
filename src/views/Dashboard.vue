@@ -41,10 +41,20 @@
           </v-col>
         </v-row>
       </v-container>
+      <template v-slot:append>
+        <div class="pa-2">
+          <v-btn @click="signOut()" block depressed color="grey darken-3" dark>
+            Logout
+          </v-btn>
+        </div>
+      </template>
     </v-navigation-drawer>
     <v-app-bar app flat color="white">
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
-      <v-toolbar-title>Welcome</v-toolbar-title>
+      <v-toolbar-title
+        >Welcome,
+        {{ $store.getters["User/getUser"].attributes.email }}</v-toolbar-title
+      >
     </v-app-bar>
 
     <!-- Sizes your content based upon application components -->
@@ -72,5 +82,10 @@ export default Vue.extend({
       { title: "About", icon: "mdi-help-box" },
     ],
   }),
+  methods: {
+    async signOut() {
+      this.$store.dispatch("User/signOut");
+    },
+  },
 });
 </script>
