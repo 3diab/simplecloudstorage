@@ -52,8 +52,7 @@
     <v-app-bar app flat color="white">
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
       <v-toolbar-title
-        >Welcome,
-        {{ $store.getters["User/getUser"].attributes.email }}</v-toolbar-title
+        >Welcome, {{ $store.getters["User/getUserEmail"] }}</v-toolbar-title
       >
     </v-app-bar>
 

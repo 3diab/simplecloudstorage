@@ -38,6 +38,7 @@ const actions: ActionTree<State, unknown> = {
   },
   async signOut({ commit }) {
     await Auth.signOut();
+    commit("setUser", null);
     router.replace({ name: "Login" });
   },
   async signUp(
@@ -109,6 +110,14 @@ const getters: GetterTree<State, unknown> = {
   },
   getUser: (state) => {
     return state.authenticatedUser;
+  },
+  getUserEmail: (state) => {
+    if (state.authenticatedUser) {
+      const userEmail = state.authenticatedUser["attributes"].email;
+      return userEmail;
+    } else {
+      return "No User";
+    }
   },
 
   getSignInError: (state) => {
