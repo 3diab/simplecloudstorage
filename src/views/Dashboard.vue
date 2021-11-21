@@ -30,7 +30,7 @@
 
                 <v-list-item-content>
                   <v-list-item-title
-                    class="font-weight-regular text-subtitle-1"
+                    class="font-weight-medium text-subtitle-1"
                     >{{ item.title }}</v-list-item-title
                   >
                 </v-list-item-content>
@@ -49,7 +49,7 @@
     </v-navigation-drawer>
     <v-app-bar app flat color="transparent">
       <v-container class="mx-6">
-        <v-row justify="center">
+        <v-row justify="end">
           <v-col cols="8">
             <v-text-field
               solo
