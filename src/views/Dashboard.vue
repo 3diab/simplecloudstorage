@@ -22,6 +22,7 @@
                 :key="item.title"
                 link
                 :to="item.to"
+                color="light-blue darken-2"
               >
                 <v-list-item-icon>
                   <v-icon>{{ item.icon }}</v-icon>
@@ -47,17 +48,9 @@
       </template>
     </v-navigation-drawer>
     <v-app-bar app flat color="transparent">
-      <v-app-bar-title class="grey--text text--darken-1 text-subtitle-1"
-        >Welcome,
-        <span class="grey--text text--darken-4 font-weight-bold">
-          {{ $store.getters["User/getUserName"] }}</span
-        ></v-app-bar-title
-      >
-
       <v-container class="mx-6">
-        <v-row>
+        <v-row justify="center">
           <v-col cols="8">
-            <v-spacer></v-spacer>
             <v-text-field
               solo
               label="Search"
