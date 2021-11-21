@@ -28,7 +28,7 @@ const actions: ActionTree<State, unknown> = {
       console.log(user);
       commit("setUser", user);
       commit("setLoginProgressState", false);
-      router.replace({ name: "Dashboard" });
+      router.replace({ name: "Browser" });
     } catch (error: any) {
       commit("setLoginProgressState", false);
 
