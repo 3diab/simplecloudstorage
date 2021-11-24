@@ -47,7 +47,7 @@
         </div>
       </template>
     </v-navigation-drawer>
-    <v-app-bar app flat color="transparent">
+    <v-app-bar app absolute flat color="transparent">
       <v-container class="mx-6">
         <v-row justify="end">
           <v-col cols="8">
