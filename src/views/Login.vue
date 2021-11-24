@@ -46,7 +46,7 @@
                       outlined
                       class="mt-0"
                       validate-on-blur
-                      v-on:keyup.enter="validate"
+                      v-on:keyup.enter="validateSignIn"
                     ></v-text-field>
 
                     <v-text-field
@@ -59,7 +59,7 @@
                       flat
                       outlined
                       :error="false"
-                      v-on:keyup.enter="validate"
+                      v-on:keyup.enter="validateSignIn"
                       validate-on-blur
                     ></v-text-field>
 
@@ -116,7 +116,7 @@
                       flat
                       outlined
                       class="mt-0"
-                      v-on:keyup.enter="validate"
+                      v-on:keyup.enter="validateSignUp"
                     ></v-text-field>
 
                     <v-text-field
@@ -130,7 +130,7 @@
                       background-color="grey lighten-3"
                       flat
                       :error="false"
-                      v-on:keyup.enter="validate"
+                      v-on:keyup.enter="validateSignUp"
                     ></v-text-field>
 
                     <v-text-field
