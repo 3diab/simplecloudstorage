@@ -223,7 +223,7 @@
       ></v-progress-linear>
       <v-divider></v-divider>
       <v-list class="mt-n2">
-        <v-list-item-group v-model="selectedFile" color="primary" multiple>
+        <v-list-item-group v-model="selectedFile" color="primary">
           <template v-for="(item, i) in getFilesAtPath">
             <v-list-item
               :key="i"
