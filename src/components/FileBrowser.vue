@@ -197,7 +197,7 @@
     <v-card rounded="lg" flat class="my-3">
       <v-toolbar flat dense height="40" color="grey darken-3" dark>
         <v-row>
-          <v-col cols="6"
+          <v-col cols="4"
             ><v-list-item-title class="text-subtitle-2">
               File Name</v-list-item-title
             ></v-col
@@ -224,78 +224,8 @@
       <v-divider></v-divider>
       <v-list class="mt-n2">
         <v-list-item-group v-model="selectedFile" color="primary">
-          <template v-for="(item, i) in getFilesAtPath">
-            <v-list-item
-              :key="i"
-              @dblclick="HandleFileDoubleClick(item.__data.key)"
-              :ripple="false"
-            >
-              <v-list-item-avatar size="20" tile>
-                <v-icon class="" :color="getFileType(item.__data.key).color">
-                  {{ getFileType(item.__data.key).icon }}
-                </v-icon>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-row>
-                  <v-col cols="6" align-self="center"
-                    ><v-list-item-title class="grey--text text--darken-3">{{
-                      item.__data.key.slice(-1) === "/"
-                        ? item.__data.key.slice(0, -1).split("/").pop()
-                        : item.__data.key.split("/").pop()
-                    }}</v-list-item-title></v-col
-                  >
-                  <v-col cols="2" align-self="center"
-                    ><v-list-item-title class="grey--text text--darken-1">{{
-                      new Date(item.__data.lastModified).toLocaleString()
-                    }}</v-list-item-title>
-                  </v-col>
-                  <v-col cols="2" align-self="center"
-                    ><v-list-item-title class="grey--text text--darken-1"
-                      >{{ formatBytes(item.__data.size) }}
-                    </v-list-item-title>
-                  </v-col>
-                  <v-col cols="2" align-self="center">
-                    <v-row>
-                      <v-spacer></v-spacer>
-                      <v-menu bottom left>
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-btn icon v-bind="attrs" v-on="on" class="mx-4">
-                            <v-icon>mdi-dots-vertical</v-icon>
-                          </v-btn>
-                        </template>
-
-                        <v-card class="mx-auto" max-width="300" tile>
-                          <v-list dense nav>
-                            <v-list-item-group color="primary">
-                              <v-list-item
-                                :disabled="item.__data.key.slice(-1) === '/'"
-                                v-for="(contextItem, i) in contextMenuItems"
-                                :key="i"
-                                @click="
-                                  HandleContextClick(
-                                    contextItem.action,
-                                    item.__data.key
-                                  )
-                                "
-                              >
-                                <v-list-item-icon>
-                                  <v-icon v-text="contextItem.icon"></v-icon>
-                                </v-list-item-icon>
-                                <v-list-item-content>
-                                  <v-list-item-title
-                                    v-text="contextItem.text"
-                                  ></v-list-item-title>
-                                </v-list-item-content>
-                              </v-list-item>
-                            </v-list-item-group>
-                          </v-list>
-                        </v-card>
-                      </v-menu>
-                    </v-row>
-                  </v-col>
-                </v-row>
-              </v-list-item-content>
-            </v-list-item>
+          <template v-for="(file, i) in getFilesAtPath">
+            <file :key="i" :file="file"></file>
             <v-divider :key="i + 'div'"></v-divider>
           </template>
         </v-list-item-group>
@@ -311,8 +241,12 @@ import {
 } from "@aws-amplify/storage/";
 import { Storage } from "aws-amplify";
 import Vue, { PropType } from "vue";
+import File from "../components/File.vue";
 export default Vue.extend({
   name: "FileBrowser",
+  components: {
+    File,
+  },
   props: {
     initPath: {
       type: String,
