@@ -212,6 +212,11 @@
               Size
             </v-list-item-title>
           </v-col>
+          <v-col cols="2"
+            ><v-list-item-title class="text-subtitle-2">
+              Type
+            </v-list-item-title>
+          </v-col>
         </v-row>
       </v-toolbar>
 
@@ -223,9 +228,23 @@
       ></v-progress-linear>
       <v-divider></v-divider>
       <v-list class="mt-n2">
+        <v-alert
+          dense
+          type="info"
+          outlined
+          class="mt-3 mx-5"
+          text
+          v-if="Object.keys(getFilesAtPath).length === 0"
+        >
+          Seems like you don't have any Files.Start uploading now!
+        </v-alert>
         <v-list-item-group v-model="selectedFile" color="primary">
           <template v-for="(file, i) in getFilesAtPath">
-            <file :key="i" :file="file"></file>
+            <file
+              :key="i"
+              :file="file"
+              v-on:file-double-click="handleFileDoubleClick"
+            ></file>
             <v-divider :key="i + 'div'"></v-divider>
           </template>
         </v-list-item-group>
@@ -499,7 +518,7 @@ export default Vue.extend({
       }
       return filetype;
     },
-    HandleFileDoubleClick(objectKey: string) {
+    handleFileDoubleClick(objectKey: string) {
       if (objectKey.slice(-1) === "/") {
         //its a folder so change to that path
         this.navigationHistory.push(this.currentPath);
@@ -507,19 +526,7 @@ export default Vue.extend({
         this.currentPath = objectKey;
       }
     },
-    HandleContextClick(action: string, filename: string) {
-      switch (action) {
-        case "delete":
-          this.confirmDelete(filename);
-          break;
-        case "download":
-          this.DownloadFile(true, filename);
-          break;
-        case "getlink":
-          this.DownloadFile(false, filename);
-          break;
-      }
-    },
+
     navigateBack() {
       if (this.navigationHistory.length > 0) {
         const path = this.navigationHistory.pop();
