@@ -1,6 +1,6 @@
 <template>
   <v-list-item
-    @dblclick="HandleFileDoubleClick(file.__data.key)"
+    @dblclick="handleFileDoubleClick(file.__data.key)"
     :ripple="false"
     @mouseover="hover(true)"
     @mouseleave="hover(false)"
@@ -29,7 +29,12 @@
             >{{ formatBytes(file.__data.size) }}
           </v-list-item-title>
         </v-col>
-        <v-col cols="2" align-self="start">
+        <v-col cols="2" align-self="center"
+          ><v-list-item-title class="grey--text text--darken-1"
+            >{{ getFileType(file.__data.key).desc }}
+          </v-list-item-title>
+        </v-col>
+        <v-col cols="2" align-self="center">
           <v-row>
             <v-btn
               icon
@@ -37,7 +42,9 @@
               :key="i"
               :disabled="file.__data.key.slice(-1) === '/'"
               v-show="fileHoverState"
-              @click="HandleContextClick(contextItem.action, file.__data.key)"
+              @click="
+                handleFileActionClick(contextItem.action, file.__data.key)
+              "
             >
               <v-icon dark>{{ contextItem.icon }}</v-icon>
             </v-btn>
@@ -63,6 +70,12 @@ export default Vue.extend({
         icon: "mdi-file-document-outline",
         action: "",
         color: "teal darken-1",
+      },
+      glb: {
+        desc: "3D File",
+        icon: "mdi-cube-scan",
+        action: "",
+        color: "red darken-1",
       },
       folder: {
         desc: "File folder",
@@ -152,6 +165,10 @@ export default Vue.extend({
         case "jpg":
           filetype = this.fileTypes.jpg;
           break;
+        case "gltf":
+        case "glb":
+          filetype = this.fileTypes.glb;
+          break;
         case "png":
           filetype = this.fileTypes.png;
           break;
@@ -169,10 +186,11 @@ export default Vue.extend({
       const i = Math.floor(Math.log(bytes) / Math.log(k));
       return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
     },
-    HandleFileDoubleClick(objectKey: string) {
+    handleFileDoubleClick(objectKey: string) {
       console.log("Double clicked on ", objectKey);
+      this.$emit("file-double-click", objectKey);
     },
-    HandleContextClick(action: string, filename: string) {
+    handleFileActionClick(action: string, filename: string) {
       switch (action) {
         case "delete":
           this.confirmDelete(filename);
