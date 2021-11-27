@@ -204,7 +204,7 @@
           >
           <v-col cols="2" class="ml-4"
             ><v-list-item-title class="text-subtitle-2">
-              Last Modified</v-list-item-title
+              Access</v-list-item-title
             >
           </v-col>
           <v-col cols="2"
@@ -238,7 +238,11 @@
         >
           Seems like you don't have any Files.Start uploading now!
         </v-alert>
-        <v-list-item-group v-model="selectedFile" color="primary">
+        <v-list-item-group
+          v-model="selectedFile"
+          color="primary"
+          :multiple="getMultipleState"
+        >
           <template v-for="(file, i) in getFilesAtPath">
             <file
               :key="i"
@@ -279,6 +283,7 @@ export default Vue.extend({
     },
   },
   data: () => ({
+    ctrlPressed: false,
     copyLinkDialog: false,
     copyLinkData: {},
     deleteDialog: false,
@@ -369,6 +374,14 @@ export default Vue.extend({
       },
     },
   }),
+  watch: {
+    selectedFile: function (newValue, oldValue) {
+      // console.log(newValue, oldValue);
+      // if (newValue.length > 1 && !this.ctrlPressed) {
+      //   this.selectedFile.splice(0, 1);
+      // }
+    },
+  },
   methods: {
     validateNewFolderName() {
       if (
@@ -389,12 +402,12 @@ export default Vue.extend({
     async CreateNewFolder() {
       if (this.newFolderName === "") return;
       let folderName = this.currentPath + this.newFolderName + "/";
-      console.log(folderName);
+      // console.log(folderName);
       const result = await Storage.put(folderName, " ");
       this.newFolderName = "";
       this.newFolderDialog = false;
       this.listRemote(this.initPath);
-      console.log(result);
+      // console.log(result);
     },
     async StartUpload() {
       if (this.fileList.length === 0) return;
@@ -402,7 +415,7 @@ export default Vue.extend({
       this.fileList.forEach((fileobj) => {
         this.UploadSingleFile(fileobj);
       });
-      console.log("upload finished");
+      // console.log("upload finished");
     },
     async UploadSingleFile(file: File) {
       let fullFileName = this.currentPath + file.name;
@@ -416,23 +429,23 @@ export default Vue.extend({
         filename: file.name,
         progress: 0,
       });
-      console.log("filename :" + file.name);
+      // console.log("filename :" + file.name);
       if (file === null) return;
       try {
         const result = await Storage.put(fullFileName, file, {
           progressCallback: (progress) => {
             this.fileUploadProgress[id].progress =
               (progress.loaded / progress.total) * 100;
-            console.log(`Uploaded: ${progress.loaded}/${progress.total}`);
+            // console.log(`Uploaded: ${progress.loaded}/${progress.total}`);
           },
         });
-        console.log(result);
+        // console.log("File uploaded:", result);
         Vue.delete(this.fileUploadProgress, result.key);
         if (
           Object.keys(this.fileUploadProgress).length === 0 &&
           this.fileUploadProgress.constructor === Object
         ) {
-          console.log("File downloadin completed");
+          // console.log("File downloadin completed");
           this.fileList = [];
           this.isUploading = false;
           this.uploadDialog = false;
@@ -447,9 +460,9 @@ export default Vue.extend({
       this.isListLoading = true;
       Storage.list(path) // for listing ALL files without prefix, pass '' instead
         .then((result) => {
-          console.log(result);
+          // console.log(result);
           this.remoteFileList = this.processStorageList(result);
-          console.warn(this.remoteFileList);
+          // console.warn(this.remoteFileList);
           this.currentPath = this.initPath;
           this.isListLoading = false;
         })
@@ -541,11 +554,11 @@ export default Vue.extend({
     },
     async RemoveRemoteFile(fileName: string) {
       let fullFileName = fileName;
-      console.log("Full file name :" + fullFileName);
+      // console.log("Full file name :" + fullFileName);
       var result = await Storage.remove(fullFileName);
       this.deleteFileName = "";
       this.deleteDialog = false;
-      console.log(result);
+      // console.log(result);
       this.listRemote(this.initPath);
     },
     async DownloadFile(isDownload: boolean, fileName: string) {
@@ -565,10 +578,14 @@ export default Vue.extend({
           url: signedURL,
         };
       }
-      console.log(signedURL);
+      // console.log(signedURL);
     },
   },
   computed: {
+    getMultipleState() {
+      // console.log(this.ctrlPressed);
+      return this.ctrlPressed;
+    },
     getFilesAtPath() {
       console.log("Getting files in path:", this.currentPath);
       if (this.currentPath === "") {
@@ -581,8 +598,8 @@ export default Vue.extend({
             currentPathObj = currentPathObj[pathVars[index]];
           }
         }
-        console.log("current path object");
-        console.log(currentPathObj);
+        // console.log("current path object");
+        // console.log(currentPathObj);
         let objCopy = Object.assign({}, currentPathObj);
         delete objCopy.__data;
         return objCopy;
@@ -633,6 +650,16 @@ export default Vue.extend({
       },
       false
     );
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Control" || e.key === "Meta") {
+        this.ctrlPressed = true;
+      }
+    });
+    window.addEventListener("keyup", (e) => {
+      if (e.key === "Control" || e.key === "Meta") {
+        this.ctrlPressed = false;
+      }
+    });
   },
 });
 </script>
