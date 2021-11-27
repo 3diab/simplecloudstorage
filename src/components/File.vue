@@ -13,16 +13,25 @@
     <v-list-item-content>
       <v-row>
         <v-col cols="4" align-self="center"
-          ><v-list-item-title class="grey--text text--darken-3">{{
+          ><v-list-item-title class="grey--text text--darken-4">{{
             file.__data.key.slice(-1) === "/"
               ? file.__data.key.slice(0, -1).split("/").pop()
               : file.__data.key.split("/").pop()
           }}</v-list-item-title></v-col
         >
         <v-col cols="2" align-self="center"
-          ><v-list-item-title class="grey--text text--darken-1">{{
-            new Date(file.__data.lastModified).toLocaleString()
-          }}</v-list-item-title>
+          ><v-list-item-title class="grey--text text--darken-1">
+            <v-chip
+              v-if="filePublicStatus"
+              small
+              outlined
+              :color="filePublicStatus.color"
+              dark
+              label
+            >
+              {{ filePublicStatus.text }}
+            </v-chip>
+          </v-list-item-title>
         </v-col>
         <v-col cols="2" align-self="center"
           ><v-list-item-title class="grey--text text--darken-1"
@@ -57,6 +66,8 @@
 <script lang="ts">
 import Vue, { PropType } from "vue";
 import { Storage } from "aws-amplify";
+import awsconfig from "../aws-exports";
+
 export default Vue.extend({
   name: "File",
   props: {
@@ -140,6 +151,7 @@ export default Vue.extend({
     copyLinkData: {},
     deleteDialog: false,
     deleteFileName: "",
+    filePublicStatus: { text: "", color: "grey" },
   }),
 
   methods: {
@@ -227,6 +239,28 @@ export default Vue.extend({
       }
       console.log(signedURL);
     },
+    async getPublicFileUrl() {
+      const signedURL = await Storage.get(this.file.__data.key, {
+        download: false,
+      });
+      const publicUrl = signedURL.split("?")[0];
+      return publicUrl;
+      //console.log(publicUrl);
+    },
+    async getPublicAccessState() {
+      const result = await this.getPublicFileUrl();
+      console.log(result);
+      fetch(result, { method: "HEAD" }).then((res) => {
+        if (res.ok) {
+          this.filePublicStatus = { text: "public", color: "red" };
+        } else if (res.status === 403) {
+          this.filePublicStatus = { text: "private", color: "green" };
+        }
+      });
+    },
+  },
+  mounted() {
+    this.getPublicAccessState();
   },
 });
 </script>
