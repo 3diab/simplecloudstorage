@@ -47,6 +47,25 @@
         </div>
       </template>
     </v-navigation-drawer>
+    <v-navigation-drawer app floating right v-model="rightSidebar">
+      <v-card flat tile>
+        <v-card-title> File Name </v-card-title>
+
+        <v-card-subtitle>Type</v-card-subtitle>
+
+        <v-divider></v-divider>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <span class="text-subtitle-1 font-weight-regular">Details</span>
+            </v-row>
+            <v-row> Created : </v-row>
+            <v-row> Modified : </v-row>
+          </v-container>
+        </v-card-text>
+      </v-card>
+    </v-navigation-drawer>
+
     <v-app-bar app absolute flat color="transparent">
       <v-container class="mx-6">
         <v-row justify="end">
@@ -82,10 +101,11 @@ import Vue from "vue";
 export default Vue.extend({
   name: "Dashboard",
   data: () => ({
+    rightSidebar: true,
     mainMenuItems: [
       { title: "My Files", icon: "mdi-folder", to: { name: "Browser" } },
-      { title: "Trash", icon: "mdi-trash-can" },
-      { title: "About", icon: "mdi-help-box" },
+
+      { title: "Help", icon: "mdi-help-box" },
     ],
   }),
   methods: {
