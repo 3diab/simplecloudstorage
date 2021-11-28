@@ -1,6 +1,7 @@
 <template>
   <v-list-item
     @dblclick="handleFileDoubleClick(file.__data.key)"
+    @click="setSelectedFile()"
     :ripple="false"
     @mouseover="hover(true)"
     @mouseleave="hover(false)"
@@ -14,7 +15,7 @@
       <v-row>
         <v-col cols="4" align-self="center"
           ><v-list-item-title class="grey--text text--darken-4">{{
-            file.__data.key.slice(-1) === "/"
+            isFolder(file.__data.key)
               ? file.__data.key.slice(0, -1).split("/").pop()
               : file.__data.key.split("/").pop()
           }}</v-list-item-title></v-col
@@ -158,6 +159,15 @@ export default Vue.extend({
     hover(state: boolean) {
       this.fileHoverState = state;
     },
+    async setSelectedFile() {
+      this.$store.commit("Main/setSelectedFile", this.file);
+      this.$store.commit("Main/setRightSidebarState", true);
+
+      this.$store.commit("Main/setCurrentUrls", await this.getPublicFileUrl());
+    },
+    isFolder(fileKey: string) {
+      return fileKey.slice(-1) === "/";
+    },
     getFileType(filename: string) {
       var ext = filename.split(".").pop();
       var folderCheck = filename.slice(-1) === "/";
@@ -190,7 +200,7 @@ export default Vue.extend({
       return filetype;
     },
     formatBytes(bytes: number, decimals = 2) {
-      if (bytes === 0) return "0 Bytes";
+      if (bytes === 0) return "-";
       if (bytes === 1) return "-";
       const k = 1024;
       const dm = decimals < 0 ? 0 : decimals;
@@ -216,14 +226,16 @@ export default Vue.extend({
       }
     },
     confirmDelete(filename: string) {
-      console.log("Deleting : " + filename);
-      this.deleteDialog = true;
-      this.deleteFileName = filename;
+      // console.log("Deleting : " + filename);
+      // this.deleteDialog = true;
+      // this.deleteFileName = filename;
+      this.$emit("delete-file", filename);
     },
     async DownloadFile(isDownload: boolean, fileName: string) {
       this.copyLinkData = {};
       const signedURL = await Storage.get(fileName, {
         download: false,
+        level: "private",
         progressCallback(progress) {
           // console.log(`Downloaded file ${fileName}: ${progress.loaded}/${progress.total}`);
         },
@@ -242,15 +254,17 @@ export default Vue.extend({
     async getPublicFileUrl() {
       const signedURL = await Storage.get(this.file.__data.key, {
         download: false,
+        level: "private",
       });
       const publicUrl = signedURL.split("?")[0];
-      return publicUrl;
+      return { temporary: signedURL, public: publicUrl };
+
       //console.log(publicUrl);
     },
     async getPublicAccessState() {
       const result = await this.getPublicFileUrl();
       console.log(result);
-      fetch(result, { method: "HEAD" }).then((res) => {
+      fetch(result.public, { method: "HEAD" }).then((res) => {
         if (res.ok) {
           this.filePublicStatus = { text: "public", color: "red" };
         } else if (res.status === 403) {

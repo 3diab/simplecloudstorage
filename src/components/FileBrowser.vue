@@ -180,6 +180,11 @@
           <v-divider></v-divider>
 
           <v-card-actions>
+            <v-checkbox
+              v-model="isFileUploadPrivate"
+              label="private"
+              v-if="false"
+            ></v-checkbox>
             <v-spacer></v-spacer>
             <v-btn
               color="primary"
@@ -248,6 +253,7 @@
               :key="i"
               :file="file"
               v-on:file-double-click="handleFileDoubleClick"
+              v-on:delete-file="confirmDelete"
             ></file>
             <v-divider :key="i + 'div'"></v-divider>
           </template>
@@ -283,6 +289,7 @@ export default Vue.extend({
     },
   },
   data: () => ({
+    isFileUploadPrivate: false,
     ctrlPressed: false,
     copyLinkDialog: false,
     copyLinkData: {},
@@ -375,10 +382,14 @@ export default Vue.extend({
     },
   }),
   watch: {
-    selectedFile: function (newValue, oldValue) {
-      // console.log(newValue, oldValue);
-      // if (newValue.length > 1 && !this.ctrlPressed) {
-      //   this.selectedFile.splice(0, 1);
+    selectedFile: function (newValue) {
+      // console.log("Setting", newValue);
+      // if (typeof newValue === "number") {
+      //   this.$store.commit("Main/setSelectedFile", newValue);
+      //   this.$store.commit("Main/setRightSidebarState", true);
+      // } else {
+      //   this.$store.commit("Main/setSelectedFile", {});
+      //   this.$store.commit("Main/setRightSidebarState", false);
       // }
     },
   },
@@ -403,10 +414,11 @@ export default Vue.extend({
       if (this.newFolderName === "") return;
       let folderName = this.currentPath + this.newFolderName + "/";
       // console.log(folderName);
-      const result = await Storage.put(folderName, " ");
+      const result = await Storage.put(folderName, "", { level: "private" });
       this.newFolderName = "";
       this.newFolderDialog = false;
       this.listRemote(this.initPath);
+
       // console.log(result);
     },
     async StartUpload() {
@@ -433,6 +445,9 @@ export default Vue.extend({
       if (file === null) return;
       try {
         const result = await Storage.put(fullFileName, file, {
+          level: "private",
+          acl: "public-read",
+
           progressCallback: (progress) => {
             this.fileUploadProgress[id].progress =
               (progress.loaded / progress.total) * 100;
@@ -458,7 +473,7 @@ export default Vue.extend({
     },
     listRemote(path = "") {
       this.isListLoading = true;
-      Storage.list(path) // for listing ALL files without prefix, pass '' instead
+      Storage.list(path, { level: "private" }) // for listing ALL files without prefix, pass '' instead
         .then((result) => {
           // console.log(result);
           this.remoteFileList = this.processStorageList(result);
@@ -494,6 +509,7 @@ export default Vue.extend({
           delete filesystem[excludedPath];
         }
       });
+      console.log(filesystem);
       return filesystem;
     },
     formatBytes(bytes: number, decimals = 2) {
@@ -548,14 +564,14 @@ export default Vue.extend({
       }
     },
     confirmDelete(filename: string) {
-      console.log("Deleting : " + filename);
+      console.log("Confirming delete", filename);
       this.deleteDialog = true;
       this.deleteFileName = filename;
     },
     async RemoveRemoteFile(fileName: string) {
       let fullFileName = fileName;
       // console.log("Full file name :" + fullFileName);
-      var result = await Storage.remove(fullFileName);
+      var result = await Storage.remove(fullFileName, { level: "private" });
       this.deleteFileName = "";
       this.deleteDialog = false;
       // console.log(result);

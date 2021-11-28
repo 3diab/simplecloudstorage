@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-navigation-drawer app floating>
+    <v-navigation-drawer app floating v-model="leftSidebar">
       <v-container>
         <v-row justify="center" no-gutters>
           <v-col>
@@ -47,40 +47,71 @@
         </div>
       </template>
     </v-navigation-drawer>
-    <v-navigation-drawer app floating right v-model="rightSidebar">
+    <v-navigation-drawer
+      app
+      floating
+      right
+      v-if="$store.getters['Main/getRightSidebarState']"
+    >
       <v-card flat tile>
-        <v-card-title> File Name </v-card-title>
+        <v-toolbar flat dense>
+          <v-toolbar-title>
+            {{ getSelectedFile.__data.key }}
+          </v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn small icon @click="closeRightSidebar()"
+            ><v-icon>mdi-close</v-icon></v-btn
+          >
+        </v-toolbar>
 
-        <v-card-subtitle>Type</v-card-subtitle>
+        <v-card-subtitle></v-card-subtitle>
 
         <v-divider></v-divider>
         <v-card-text>
           <v-container>
             <v-row>
-              <span class="text-subtitle-1 font-weight-regular">Details</span>
+              <v-text-field
+                :disabled="getSelectedFile.__data.key.slice(-1) === '/'"
+                :value="$store.getters['Main/getCurrentUrls'].public"
+                append-outer-icon="mdi-content-copy"
+                outlined
+                dense
+                readonly
+                label="Public URl"
+                type="text"
+                @click:append-outer="copyUrl('public')"
+              ></v-text-field>
+              <v-text-field
+                :disabled="getSelectedFile.__data.key.slice(-1) == '/'"
+                :value="$store.getters['Main/getCurrentUrls'].temporary"
+                append-outer-icon="mdi-content-copy"
+                outlined
+                dense
+                readonly
+                label="Temporary URl"
+                type="text"
+                @click:append-outer="copyUrl('temporary')"
+              ></v-text-field>
             </v-row>
-            <v-row> Created : </v-row>
-            <v-row> Modified : </v-row>
           </v-container>
         </v-card-text>
       </v-card>
     </v-navigation-drawer>
 
     <v-app-bar app absolute flat color="transparent">
-      <v-container class="mx-6">
-        <v-row justify="end">
-          <v-col cols="8">
-            <v-text-field
-              solo
-              label="Search"
-              flat
-              hide-details
-              background-color="white"
-              prepend-inner-icon="mdi-magnify"
-            ></v-text-field>
-          </v-col>
-        </v-row>
-      </v-container>
+      <v-app-bar-nav-icon @click="toggleLeftSidebar()"></v-app-bar-nav-icon>
+      <v-row justify="end" no-gutters>
+        <v-col cols="8">
+          <v-text-field
+            solo
+            label="Search"
+            flat
+            hide-details
+            background-color="white"
+            prepend-inner-icon="mdi-magnify"
+          ></v-text-field>
+        </v-col>
+      </v-row>
     </v-app-bar>
 
     <!-- Sizes your content based upon application components -->
@@ -102,6 +133,7 @@ export default Vue.extend({
   name: "Dashboard",
   data: () => ({
     rightSidebar: true,
+    leftSidebar: true,
     mainMenuItems: [
       { title: "My Files", icon: "mdi-folder", to: { name: "Browser" } },
 
@@ -109,8 +141,38 @@ export default Vue.extend({
     ],
   }),
   methods: {
+    copyUrl(mode: string) {
+      console.log("copy url");
+      if (mode === "public") {
+        console.log("copy public");
+        navigator.clipboard.writeText(
+          this.$store.getters["Main/getCurrentUrls"].public
+        );
+      } else {
+        console.log("copy temporary");
+        navigator.clipboard.writeText(
+          this.$store.getters["Main/getCurrentUrls"].temporary
+        );
+      }
+    },
     async signOut() {
       this.$store.dispatch("User/signOut");
+    },
+    toggleLeftSidebar() {
+      this.leftSidebar = !this.leftSidebar;
+    },
+    closeRightSidebar() {
+      this.$store.commit("Main/setRightSidebarState", false);
+    },
+  },
+  computed: {
+    getSelectedFile() {
+      const selectedFile = this.$store.getters["Main/getSelectedFile"];
+      if (selectedFile) {
+        return selectedFile;
+      } else {
+        return {};
+      }
     },
   },
 });
