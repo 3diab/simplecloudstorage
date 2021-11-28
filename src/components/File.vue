@@ -243,11 +243,13 @@ export default Vue.extend({
       if (isDownload) {
         window.open(signedURL, "_blank");
       } else {
-        this.copyLinkDialog = true;
-        this.copyLinkData = {
-          name: fileName,
-          url: signedURL,
-        };
+        //this.copyLinkDialog = true;
+        // this.copyLinkData = {
+        //   name: fileName,
+        //   url: signedURL,
+        // };
+        navigator.clipboard.writeText(signedURL);
+        this.$emit("link-copied");
       }
       console.log(signedURL);
     },
