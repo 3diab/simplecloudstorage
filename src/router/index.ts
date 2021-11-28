@@ -3,17 +3,26 @@ import { Auth } from "aws-amplify";
 import VueRouter, { RouteConfig } from "vue-router";
 import Login from "../views/Login.vue";
 import Dashboard from "../views/Dashboard.vue";
+import store from "@/store";
+
+import FileBrowser from "../components/FileBrowser.vue";
 
 Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
   {
     path: "/",
-    name: "Dashboard",
     component: Dashboard,
     meta: {
       requiresAuth: true,
     },
+    children: [
+      {
+        path: "/",
+        name: "Browser",
+        component: FileBrowser,
+      },
+    ],
   },
   {
     path: "/login",
@@ -39,6 +48,7 @@ router.beforeEach((to, from, next) => {
     })
       .then((user) => {
         console.log(user);
+        store.commit("User/setUser", user);
         next();
       })
       .catch((err) => {

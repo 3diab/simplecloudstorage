@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-navigation-drawer app color="grey lighten-5" floating>
+    <v-navigation-drawer app floating v-model="leftSidebar">
       <v-container>
         <v-row justify="center" no-gutters>
           <v-col>
@@ -14,25 +14,23 @@
               </v-list-item-content>
             </v-list-item>
 
-            <v-btn
-              dark
-              block
-              depressed
-              color="blue"
-              class="text-none font-weight-light mt-5 text-h6 py-6"
-            >
-              <v-icon class="mr-2">mdi-plus</v-icon> Create New</v-btn
-            >
+            <v-divider></v-divider>
 
             <v-list nav>
-              <v-list-item v-for="item in mainMenuItems" :key="item.title" link>
+              <v-list-item
+                v-for="item in mainMenuItems"
+                :key="item.title"
+                link
+                :to="item.to"
+                color="light-blue darken-2"
+              >
                 <v-list-item-icon>
                   <v-icon>{{ item.icon }}</v-icon>
                 </v-list-item-icon>
 
                 <v-list-item-content>
                   <v-list-item-title
-                    class="font-weight-regular text-subtitle-1"
+                    class="font-weight-medium text-subtitle-1"
                     >{{ item.title }}</v-list-item-title
                   >
                 </v-list-item-content>
@@ -49,19 +47,66 @@
         </div>
       </template>
     </v-navigation-drawer>
-    <v-app-bar app flat color="white">
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
-      <v-toolbar-title
-        >Welcome,
-        {{ $store.getters["User/getUser"].attributes.email }}</v-toolbar-title
-      >
+    <v-navigation-drawer
+      app
+      floating
+      right
+      v-if="$store.getters['Main/getRightSidebarState']"
+    >
+      <v-card flat tile>
+        <v-toolbar flat dense>
+          <v-toolbar-title>
+            {{ getSelectedFile.__data.key }}
+          </v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn small icon @click="closeRightSidebar()"
+            ><v-icon>mdi-close</v-icon></v-btn
+          >
+        </v-toolbar>
+
+        <v-card-subtitle></v-card-subtitle>
+
+        <v-divider></v-divider>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-text-field
+                :disabled="getSelectedFile.__data.key.slice(-1) === '/'"
+                :value="$store.getters['Main/getCurrentUrls'].public"
+                append-outer-icon="mdi-content-copy"
+                outlined
+                dense
+                readonly
+                label="Public URl"
+                type="text"
+                @click:append-outer="copyUrl('public')"
+              ></v-text-field>
+            </v-row>
+          </v-container>
+        </v-card-text>
+      </v-card>
+    </v-navigation-drawer>
+
+    <v-app-bar app absolute flat color="transparent">
+      <v-app-bar-nav-icon @click="toggleLeftSidebar()"></v-app-bar-nav-icon>
+      <v-row justify="end" no-gutters>
+        <v-col cols="8">
+          <v-text-field
+            solo
+            label="Search"
+            flat
+            hide-details
+            background-color="white"
+            prepend-inner-icon="mdi-magnify"
+          ></v-text-field>
+        </v-col>
+      </v-row>
     </v-app-bar>
 
     <!-- Sizes your content based upon application components -->
     <v-main>
       <!-- Provides the application the proper gutter -->
       <v-container fluid>
-        <!-- If using vue-router -->
         <router-view></router-view>
       </v-container>
     </v-main>
@@ -76,16 +121,59 @@ import Vue from "vue";
 export default Vue.extend({
   name: "Dashboard",
   data: () => ({
+    rightSidebar: true,
+    leftSidebar: true,
     mainMenuItems: [
-      { title: "My Files", icon: "mdi-folder" },
-      { title: "Trash", icon: "mdi-trash-can" },
-      { title: "About", icon: "mdi-help-box" },
+      { title: "My Files", icon: "mdi-folder", to: { name: "Browser" } },
+
+      { title: "Help", icon: "mdi-help-box" },
     ],
   }),
   methods: {
+    copyUrl(mode: string) {
+      console.log("copy url");
+      if (mode === "public") {
+        console.log("copy public");
+        navigator.clipboard.writeText(
+          this.$store.getters["Main/getCurrentUrls"].public
+        );
+      } else {
+        console.log("copy temporary");
+        navigator.clipboard.writeText(
+          this.$store.getters["Main/getCurrentUrls"].temporary
+        );
+      }
+    },
     async signOut() {
       this.$store.dispatch("User/signOut");
+    },
+    toggleLeftSidebar() {
+      this.leftSidebar = !this.leftSidebar;
+    },
+    closeRightSidebar() {
+      this.$store.commit("Main/setRightSidebarState", false);
+    },
+  },
+  computed: {
+    getSelectedFile() {
+      const selectedFile = this.$store.getters["Main/getSelectedFile"];
+      if (selectedFile) {
+        return selectedFile;
+      } else {
+        return {};
+      }
     },
   },
 });
 </script>
+<style>
+.v-bar-border {
+  background-color: red;
+  border-width: 0 0 thin 0;
+  border-style: solid;
+  border-bottom-color: #0000001f !important;
+}
+.v-application {
+  background-color: #e9e9e9 !important;
+}
+</style>

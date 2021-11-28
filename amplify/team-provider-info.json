@@ -9,16 +9,33 @@
       "UnauthRoleName": "amplify-simplecloudstorage-staging-93602-unauthRole",
       "StackName": "amplify-simplecloudstorage-staging-93602",
       "StackId": "arn:aws:cloudformation:eu-north-1:150450947532:stack/amplify-simplecloudstorage-staging-93602/f55a3c80-3ee4-11ec-9d5a-0a36c8ddc2aa",
-      "AmplifyAppId": "df13rfp36ndmu"
+      "AmplifyAppId": "df13rfp36ndmu",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-simplecloudstorage-staging-93602-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
     },
     "categories": {
       "auth": {
-        "SimpleCloudStorage": {}
+        "SimpleCloudStorage": {},
+        "simplecloudauth": {},
+        "userPoolGroups": {}
       },
       "function": {
         "S3Trigger430ffe51": {
           "deploymentBucketName": "amplify-simplecloudstorage-staging-93602-deployment",
           "s3Key": "amplify-builds/S3Trigger430ffe51-383042584d6b696c4230-build.zip"
+        },
+        "makeS3ObjectPublic": {
+          "deploymentBucketName": "amplify-simplecloudstorage-staging-93602-deployment",
+          "s3Key": "amplify-builds/makeS3ObjectPublic-4156346345484b326569-build.zip"
+        },
+        "makeObjectPublic": {
+          "deploymentBucketName": "amplify-simplecloudstorage-staging-93602-deployment",
+          "s3Key": "amplify-builds/makeObjectPublic-3344396f67784a745a59-build.zip"
+        }
+      },
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "df13rfp36ndmu",
+          "type": "manual"
         }
       }
     }

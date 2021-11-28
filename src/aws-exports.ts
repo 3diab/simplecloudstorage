@@ -3,37 +3,46 @@
 
 const awsmobile = {
     "aws_project_region": "eu-north-1",
-    "aws_cognito_identity_pool_id": "eu-north-1:248de280-77f8-498e-8e70-21005948966e",
+    "aws_cognito_identity_pool_id": "eu-north-1:89aab975-bb8f-489f-9e91-99d032f59bbb",
     "aws_cognito_region": "eu-north-1",
-    "aws_user_pools_id": "eu-north-1_nKJGgusIt",
-    "aws_user_pools_web_client_id": "7f9820lr6b5ujssg8nhdo16a6p",
+    "aws_user_pools_id": "eu-north-1_E4hfKBxF5",
+    "aws_user_pools_web_client_id": "lor9bebunu1dbtpqp8ulv3u9k",
     "oauth": {},
     "aws_cognito_username_attributes": [
         "EMAIL"
     ],
     "aws_cognito_social_providers": [],
     "aws_cognito_signup_attributes": [
-        "EMAIL",
-        "PREFERRED_USERNAME"
+        "EMAIL"
     ],
     "aws_cognito_mfa_configuration": "OFF",
     "aws_cognito_mfa_types": [
         "SMS"
     ],
     "aws_cognito_password_protection_settings": {
-        "passwordPolicyMinLength": 6,
+        "passwordPolicyMinLength": 8,
         "passwordPolicyCharacters": [
             "REQUIRES_LOWERCASE",
+            "REQUIRES_UPPERCASE",
             "REQUIRES_NUMBERS",
-            "REQUIRES_SYMBOLS",
-            "REQUIRES_UPPERCASE"
+            "REQUIRES_SYMBOLS"
         ]
     },
     "aws_cognito_verification_mechanisms": [
         "EMAIL"
     ],
     "aws_user_files_s3_bucket": "simplecloudstorageefded4746b7146beb038662f439a393602-staging",
-    "aws_user_files_s3_bucket_region": "eu-north-1"
+    "aws_user_files_s3_bucket_region": "eu-north-1",
+    "aws_content_delivery_bucket": "impleloudtorage-20211121182341-hostingbucket-staging",
+    "aws_content_delivery_bucket_region": "eu-north-1",
+    "aws_content_delivery_url": "http://impleloudtorage-20211121182341-hostingbucket-staging.s3-website.eu-north-1.amazonaws.com",
+    "aws_cloud_logic_custom": [
+        {
+            "name": "MakeObjectPublic",
+            "endpoint": "https://3toecrirh7.execute-api.eu-north-1.amazonaws.com/staging",
+            "region": "eu-north-1"
+        }
+    ]
 };
 
 

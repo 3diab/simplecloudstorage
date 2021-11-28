@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "storage": {
+      "SimpleCloudStaging": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}
