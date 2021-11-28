@@ -38,6 +38,9 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-snackbar v-model="linkCopiedSnackbar" timeout="1500" top centered app>
+      <v-icon>mdi-content-copy</v-icon> Temporary link copied to clipboard
+    </v-snackbar>
 
     <v-toolbar flat rounded="lg">
       <v-btn icon color="grey" @click="navigateBack()">
@@ -254,6 +257,7 @@
               :file="file"
               v-on:file-double-click="handleFileDoubleClick"
               v-on:delete-file="confirmDelete"
+              v-on:link-copied="showLinkSnackbar"
             ></file>
             <v-divider :key="i + 'div'"></v-divider>
           </template>
@@ -289,6 +293,7 @@ export default Vue.extend({
     },
   },
   data: () => ({
+    linkCopiedSnackbar: false,
     isFileUploadPrivate: false,
     ctrlPressed: false,
     copyLinkDialog: false,
@@ -394,6 +399,9 @@ export default Vue.extend({
     },
   },
   methods: {
+    showLinkSnackbar() {
+      this.linkCopiedSnackbar = true;
+    },
     validateNewFolderName() {
       if (
         (
