@@ -31,6 +31,12 @@
           "deploymentBucketName": "amplify-simplecloudstorage-staging-93602-deployment",
           "s3Key": "amplify-builds/makeObjectPublic-3344396f67784a745a59-build.zip"
         }
+      },
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "df13rfp36ndmu",
+          "type": "manual"
+        }
       }
     }
   }
