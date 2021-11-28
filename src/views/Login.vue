@@ -196,6 +196,12 @@
                         Sign In
                       </a>
                     </span>
+                    <v-row justify="center">
+                      <span class="text-caption mx-4 my-3">
+                        Trouble Signing in?
+                        <a class="font-weight-medium">Click Here.</a>
+                      </span>
+                    </v-row>
                   </v-sheet>
                 </v-col>
               </v-row>
