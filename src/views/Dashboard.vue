@@ -81,17 +81,6 @@
                 type="text"
                 @click:append-outer="copyUrl('public')"
               ></v-text-field>
-              <v-text-field
-                :disabled="getSelectedFile.__data.key.slice(-1) == '/'"
-                :value="$store.getters['Main/getCurrentUrls'].temporary"
-                append-outer-icon="mdi-content-copy"
-                outlined
-                dense
-                readonly
-                label="Temporary URl"
-                type="text"
-                @click:append-outer="copyUrl('temporary')"
-              ></v-text-field>
             </v-row>
           </v-container>
         </v-card-text>
