@@ -77,6 +77,7 @@
                 outlined
                 dense
                 readonly
+                clearable
                 label="Public URl"
                 type="text"
                 @click:append-outer="copyUrl('public')"
@@ -98,6 +99,8 @@
             hide-details
             background-color="white"
             prepend-inner-icon="mdi-magnify"
+            disabled
+            v-model="searchText"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -123,6 +126,7 @@ export default Vue.extend({
   data: () => ({
     rightSidebar: true,
     leftSidebar: true,
+    searchText: "",
     mainMenuItems: [
       { title: "My Files", icon: "mdi-folder", to: { name: "Browser" } },
 
@@ -152,6 +156,11 @@ export default Vue.extend({
     },
     closeRightSidebar() {
       this.$store.commit("Main/setRightSidebarState", false);
+    },
+  },
+  watch: {
+    searchText: function (newSearchText) {
+      this.$store.commit("Storage/setSearchText", newSearchText);
     },
   },
   computed: {
