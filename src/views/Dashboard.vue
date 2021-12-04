@@ -24,15 +24,20 @@
                 :key="item.title"
                 link
                 :to="item.to"
-                color="light-blue darken-2"
+                color="blue-grey lighten-2"
               >
-                <v-list-item-icon>
-                  <v-icon>{{ item.icon }}</v-icon>
+                <v-list-item-icon class="ml-3">
+                  <v-icon color="blue-grey darken-2">{{ item.icon }}</v-icon>
                 </v-list-item-icon>
 
                 <v-list-item-content>
                   <v-list-item-title
-                    class="font-weight-medium text-subtitle-1"
+                    class="
+                      font-weight-medium
+                      text-subtitle-2
+                      blue-grey--text
+                      text--darken-2
+                    "
                     >{{ item.title }}</v-list-item-title
                   >
                 </v-list-item-content>
@@ -56,34 +61,83 @@
       v-if="$store.getters['Main/getRightSidebarState']"
     >
       <v-card flat tile>
-        <v-toolbar flat dense>
-          <v-toolbar-title>
-            {{ getSelectedFile.__data.key }}
-          </v-toolbar-title>
+        <v-card-title
+          class="
+            text text-truncate
+            blue-grey--text
+            text--darken-2
+            font-weight-regular
+          "
+        >
+          Details
           <v-spacer></v-spacer>
           <v-btn small icon @click="closeRightSidebar()"
             ><v-icon>mdi-close</v-icon></v-btn
           >
-        </v-toolbar>
-
-        <v-card-subtitle></v-card-subtitle>
+        </v-card-title>
 
         <v-divider></v-divider>
         <v-card-text>
           <v-container>
             <v-row>
-              <v-text-field
-                :disabled="getSelectedFile.__data.key.slice(-1) === '/'"
-                :value="$store.getters['Main/getCurrentUrls'].public"
-                append-outer-icon="mdi-content-copy"
-                outlined
-                dense
-                readonly
-                clearable
-                label="Public URl"
-                type="text"
-                @click:append-outer="copyUrl('public')"
-              ></v-text-field>
+              <v-col>
+                <v-chip color="blue" small outlined label dark class="mb-2"
+                  >Name</v-chip
+                >
+                <br />
+                <span class="text-subtitle-1 font-weight-bold">
+                  {{ getSelectedFile.__data.key }}</span
+                >
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-chip color="pink" small label outlined dark class="mb-3"
+                  >Public Url</v-chip
+                >
+                <v-text-field
+                  :disabled="getSelectedFile.__data.key.slice(-1) === '/'"
+                  :value="$store.getters['Main/getCurrentUrls'].public"
+                  append-outer-icon="mdi-content-copy"
+                  outlined
+                  dense
+                  readonly
+                  hide-details=""
+                  type="text"
+                  @click:append-outer="copyUrl('public')"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-chip color="green" small label outlined dark class="mb-2"
+                  >Preview</v-chip
+                >
+                <v-sheet
+                  outlined
+                  rounded="lg"
+                  class="pa-2 mt-2"
+                  v-if="getPreviewUrl.category === 'image'"
+                >
+                  <v-img :src="getPreviewUrl.url" contain></v-img>
+                </v-sheet>
+                <v-sheet
+                  outlined
+                  rounded="lg"
+                  class="pa-2 mt-2"
+                  v-if="getPreviewUrl.category === 'model'"
+                >
+                  <div>
+                    <model-viewer
+                      camera-controls
+                      loading="eager"
+                      reveal="auto"
+                      style="width: 180px; background-color: grey"
+                      :src="getPreviewUrl.url"
+                    ></model-viewer>
+                  </div>
+                </v-sheet>
+              </v-col>
             </v-row>
           </v-container>
         </v-card-text>
@@ -123,12 +177,14 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
+
 export default Vue.extend({
   name: "Dashboard",
   data: () => ({
     rightSidebar: true,
     leftSidebar: true,
     searchText: "",
+    isMounted: false,
     mainMenuItems: [
       { title: "My Files", icon: "mdi-folder", to: { name: "Browser" } },
 
@@ -174,6 +230,43 @@ export default Vue.extend({
         return {};
       }
     },
+
+    getPreviewUrl() {
+      const selectedFile = this.$store.getters["Main/getSelectedFile"];
+      const urlObject = { category: "", url: "" };
+
+      if (selectedFile) {
+        const fileName = selectedFile.__data.key;
+        const fileExt = fileName.split(".").pop();
+        const isFolder = fileName.slice(-1) === "/";
+        if (isFolder) {
+          return urlObject;
+        }
+        switch (fileExt) {
+          case "jpg":
+          case "png":
+          case "gif":
+            urlObject.category = "image";
+            urlObject.url =
+              this.$store.getters["Main/getCurrentUrls"].temporary;
+            return urlObject;
+          case "usdz":
+          case "gltf":
+          case "glb":
+            urlObject.category = "model";
+            urlObject.url =
+              this.$store.getters["Main/getCurrentUrls"].temporary;
+            return urlObject;
+          default:
+            return urlObject;
+        }
+      } else {
+        return "";
+      }
+    },
+  },
+  mounted() {
+    this.isMounted = true;
   },
 });
 </script>
@@ -185,6 +278,9 @@ export default Vue.extend({
   border-bottom-color: #0000001f !important;
 }
 .v-application {
-  background-color: #e9e9e9 !important;
+  background-color: #eceff1 !important;
+}
+.round-border {
+  border-radius: 100px !important;
 }
 </style>
