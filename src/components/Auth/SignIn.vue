@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-card-title class="pt-4 text-h6 font-weight-light justify-center">
-      <span>Login</span>
+    <v-card-title class="py-4 text-h6 font-weight-medium justify-center">
+      <span>LOGIN</span>
     </v-card-title>
 
     <v-card-text>
@@ -132,6 +132,9 @@ export default Vue.extend({
         username: this.signInCredentials.email,
         password: this.signInCredentials.password,
       });
+    },
+    changeAuthAction(authAction: AuthAction) {
+      this.$store.commit("User/setAuthAction", authAction);
     },
   },
 });

@@ -1,12 +1,19 @@
 <template>
   <div>
-    <v-card-title class="pt-4 text-h6 font-weight-light justify-center">
-      <span>Register</span>
+    <v-card-title class="py-4 text-h6 font-weight-medium justify-center">
+      <span>REGISTER</span>
     </v-card-title>
 
     <v-card-text>
       <v-row justify="center">
         <v-col cols="10">
+          <v-alert
+            dense
+            type="info"
+            v-if="$store.getters['User/getConfirmSignUpState']"
+          >
+            Please check email for verification code.
+          </v-alert>
           <v-form
             ref="signUpForm"
             v-model="isValidSignUp"
@@ -51,8 +58,8 @@
               background-color="grey lighten-3"
               flat
               :error="false"
-              v-on:keyup.enter="validate"
-              v-if="$store.getters['User/setConfirmSignUpState']"
+              v-on:keyup.enter="validateSignUp"
+              v-if="$store.getters['User/getConfirmSignUpState']"
             ></v-text-field>
 
             <p
@@ -127,15 +134,15 @@ export default Vue.extend({
       permanentPassword: "",
     } as UserCredentials,
     isValidSignUp: true,
-    authAction: "",
   }),
   methods: {
     validateSignUp() {
+      const authAction = this.$store.getters["User/getAuthAction"];
       if ((this.$refs.signUpForm as VForm).validate()) {
-        if (this.authAction === "Confirm") {
+        if (authAction === "Confirm") {
           console.log("Initiating Confirm");
           this.confirmSignUp();
-        } else {
+        } else if (authAction === "SignUp") {
           console.log("Initiating SignUp");
           this.signUp();
         }
@@ -167,6 +174,9 @@ export default Vue.extend({
       } catch (error) {
         console.log(error);
       }
+    },
+    changeAuthAction(authAction: AuthAction) {
+      this.$store.commit("User/setAuthAction", authAction);
     },
   },
 });

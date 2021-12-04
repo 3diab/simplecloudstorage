@@ -28,4 +28,9 @@ export function passwordRules(value: string): Array<boolean | string> {
 export function codeRules(value: string): Array<boolean | string> {
   return [/^\d{6}$/.test(value) || "Code musht have 6 numbers"];
 }
-export type AuthAction = "SignIn" | "SignUp" | "Confirm" | "Reset";
+export type AuthAction =
+  | "SignIn"
+  | "SignUp"
+  | "Confirm"
+  | "Reset"
+  | "ConfirmReset";
