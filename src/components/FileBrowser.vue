@@ -611,7 +611,24 @@ export default Vue.extend({
       return this.ctrlPressed;
     },
     getFilesAtPath() {
-      console.log("Getting files in path:", this.currentPath);
+      const searchText = this.$store.getters["Storage/getSearchText"].trim();
+      // if (searchText === "") {
+      //   let counter = 0;
+
+      //   let deepIterator = (target: Record<string, any>) => {
+      //     counter++;
+      //     console.log(target);
+      //     if (typeof target === "object") {
+      //       for (const key in target) {
+      //         deepIterator(target[key]);
+      //       }
+      //     } else {
+      //       console.log(target);
+      //     }
+      //   };
+      //   deepIterator(this.remoteFileList);
+      //   console.log(searchText);
+      // }
       if (this.currentPath === "") {
         return this.remoteFileList;
       } else {
@@ -622,8 +639,8 @@ export default Vue.extend({
             currentPathObj = currentPathObj[pathVars[index]];
           }
         }
-        // console.log("current path object");
-        // console.log(currentPathObj);
+        console.log("current path object");
+        console.log(JSON.stringify(currentPathObj));
         let objCopy = Object.assign({}, currentPathObj);
         delete objCopy.__data;
         return objCopy;
