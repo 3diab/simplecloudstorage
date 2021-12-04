@@ -42,7 +42,7 @@
       <v-icon>mdi-content-copy</v-icon> Temporary link copied to clipboard
     </v-snackbar>
 
-    <v-toolbar flat rounded="lg">
+    <v-toolbar rounded="lg" flat>
       <v-btn icon color="grey" @click="navigateBack()">
         <v-icon>mdi-chevron-left</v-icon>
       </v-btn>
@@ -60,7 +60,7 @@
             v-bind="attrs"
             v-on="on"
             depressed
-            color="blue"
+            color="blue accent-3"
             class="white--text"
             large
             icon
@@ -119,7 +119,7 @@
             v-bind="attrs"
             v-on="on"
             depressed
-            color="blue"
+            color="blue accent-3"
             class="white--text mr-5"
             icon
             large
@@ -201,32 +201,40 @@
         </v-card>
       </v-dialog>
     </v-toolbar>
-
-    <v-card rounded="lg" flat class="my-3">
-      <v-toolbar flat dense height="40" color="grey darken-3" dark>
-        <v-row>
-          <v-col cols="4"
-            ><v-list-item-title class="text-subtitle-2">
-              File Name</v-list-item-title
-            ></v-col
+    <v-toolbar flat dense height="50" color="white" class="my-3" rounded="lg">
+      <v-row>
+        <v-col cols="4"
+          ><v-list-item-title
+            class="text-subtitle-2 blue-grey--text text--darken-2"
           >
-          <v-col cols="2" class="ml-4"
-            ><v-list-item-title class="text-subtitle-2">
-              Access</v-list-item-title
-            >
-          </v-col>
-          <v-col cols="2"
-            ><v-list-item-title class="text-subtitle-2">
-              Size
-            </v-list-item-title>
-          </v-col>
-          <v-col cols="2"
-            ><v-list-item-title class="text-subtitle-2">
-              Type
-            </v-list-item-title>
-          </v-col>
-        </v-row>
-      </v-toolbar>
+            File Name</v-list-item-title
+          ></v-col
+        >
+        <v-col cols="2" class="ml-4"
+          ><v-list-item-title
+            class="text-subtitle-2 blue-grey--text text--darken-2"
+          >
+            Access</v-list-item-title
+          >
+        </v-col>
+        <v-col cols="2"
+          ><v-list-item-title
+            class="text-subtitle-2 blue-grey--text text--darken-2"
+          >
+            Size
+          </v-list-item-title>
+        </v-col>
+        <v-col cols="2"
+          ><v-list-item-title
+            class="text-subtitle-2 blue-grey--text text--darken-2"
+          >
+            Type
+          </v-list-item-title>
+        </v-col>
+      </v-row>
+    </v-toolbar>
+    <v-card rounded="lg" flat class="my-3">
+      <v-card-title class="mb-n5"> </v-card-title>
 
       <v-progress-linear
         color="blue lighten-1"
@@ -234,7 +242,7 @@
         :active="isListLoading"
         height="4"
       ></v-progress-linear>
-      <v-divider></v-divider>
+
       <v-list class="mt-n2">
         <v-alert
           dense
@@ -248,10 +256,10 @@
         </v-alert>
         <v-list-item-group
           v-model="selectedFile"
-          color="primary"
+          color="grey "
           :multiple="getMultipleState"
         >
-          <template v-for="(file, i) in getFilesAtPath">
+          <template v-for="(file, i, index) in getFilesAtPath">
             <file
               :key="i"
               :file="file"
@@ -259,7 +267,10 @@
               v-on:delete-file="confirmDelete"
               v-on:link-copied="showLinkSnackbar"
             ></file>
-            <v-divider :key="i + 'div'"></v-divider>
+            <v-divider
+              v-if="index != Object.keys(getFilesAtPath).length - 1"
+              :key="i + 'div'"
+            ></v-divider>
           </template>
         </v-list-item-group>
       </v-list>

@@ -14,21 +14,28 @@
     <v-list-item-content>
       <v-row>
         <v-col cols="4" align-self="center"
-          ><v-list-item-title class="grey--text text--darken-4">{{
-            isFolder(file.__data.key)
-              ? file.__data.key.slice(0, -1).split("/").pop()
-              : file.__data.key.split("/").pop()
-          }}</v-list-item-title></v-col
+          ><v-list-item-title
+            class="
+              text-subtitle-1
+              font-weight-regular
+              grey--text
+              text--darken-2
+            "
+            >{{
+              isFolder(file.__data.key)
+                ? file.__data.key.slice(0, -1).split("/").pop()
+                : file.__data.key.split("/").pop()
+            }}</v-list-item-title
+          ></v-col
         >
         <v-col cols="2" align-self="center"
           ><v-list-item-title class="grey--text text--darken-1">
             <v-chip
               v-if="filePublicStatus"
               small
-              outlined
+              pill
               :color="filePublicStatus.color"
               dark
-              label
             >
               {{ filePublicStatus.text }}
             </v-chip>
@@ -268,9 +275,9 @@ export default Vue.extend({
       console.log(result);
       fetch(result.public, { method: "HEAD" }).then((res) => {
         if (res.ok) {
-          this.filePublicStatus = { text: "public", color: "red" };
+          this.filePublicStatus = { text: "public", color: "green" };
         } else if (res.status === 403) {
-          this.filePublicStatus = { text: "private", color: "green" };
+          this.filePublicStatus = { text: "private", color: "blue-grey" };
         }
       });
     },
