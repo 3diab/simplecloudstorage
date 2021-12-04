@@ -6,10 +6,12 @@
           <v-col>
             <v-list-item>
               <v-list-item-content>
-                <v-list-item-title
-                  class="font-weight-light text-h5 text-center"
-                >
-                  Simple <span class="font-weight-medium">Files</span>
+                <v-list-item-title class="font-weight-light text-h5 text-center"
+                  ><v-img
+                    src="../assets/images/openarcloud_logo.png"
+                    height="80"
+                    contain
+                  ></v-img>
                 </v-list-item-title>
               </v-list-item-content>
             </v-list-item>
@@ -175,7 +177,7 @@ export default Vue.extend({
   },
 });
 </script>
-<style>
+<style scoped>
 .v-bar-border {
   background-color: red;
   border-width: 0 0 thin 0;

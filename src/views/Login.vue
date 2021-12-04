@@ -1,31 +1,43 @@
 <template>
   <v-app>
     <v-container>
-      <v-row justify="center" align="center" class="mt-12">
+      <v-row justify="center" align="center">
         <v-col>
+          <v-container>
+            <v-row>
+              <v-col>
+                <v-img
+                  src="../assets/images/openarcloud_logo.png"
+                  class="mt-8 pt-4"
+                  height="120"
+                  contain
+                ></v-img>
+              </v-col>
+            </v-row>
+          </v-container>
           <v-card
             max-width="450"
-            class="mx-auto blurred-shadow"
+            class="mx-auto"
             rounded="lg"
+            flat
+            outlined
             :loading="$store.getters['User/getLoginProgressState']"
           >
-            <v-container>
-              <v-row>
-                <v-col>
-                  <v-img
-                    src="../assets/images/landing_illustration.svg"
-                    class="mt-8 pt-4"
-                    height="120"
-                    contain
-                  ></v-img>
-                </v-col>
-              </v-row>
-            </v-container>
-            <sign-in v-if="authAction === 'SignIn'"></sign-in>
+            <sign-in
+              v-if="getAuthAction === 'SignIn'"
+              v-on:change-auth-action="changeAuthAction"
+            ></sign-in>
             <sign-up
-              v-if="authAction === 'SignUp' || authAction === 'Confirm'"
+              v-if="getAuthAction === 'SignUp' || getAuthAction === 'Confirm'"
+              v-on:change-auth-action="changeAuthAction"
             ></sign-up>
-            <reset v-if="authAction === 'Reset'"></reset>
+            <reset
+              v-if="
+                getAuthAction === 'Reset' || getAuthAction === 'ConfirmReset'
+              "
+              v-on:change-auth-action="changeAuthAction"
+            ></reset>
+            <v-card-actions></v-card-actions>
           </v-card>
         </v-col>
       </v-row>
@@ -49,18 +61,21 @@ export default Vue.extend({
     Reset,
   },
   data: () => ({
-    authAction: "SignIn" as AuthAction,
-
     select: null,
   }),
   methods: {
     changeAuthAction(authAction: AuthAction) {
-      this.authAction = authAction;
+      this.$store.commit("User/setAuthAction", authAction);
+    },
+  },
+  computed: {
+    getAuthAction() {
+      return this.$store.getters["User/getAuthAction"];
     },
   },
 });
 </script>
-<style>
+<style scoped>
 .no-uppercase {
   text-transform: none;
 }
@@ -72,7 +87,7 @@ export default Vue.extend({
   border-bottom-color: #0000001f !important;
 }
 .v-application {
-  background-color: #ffffff !important;
+  background-color: #fafafa !important;
 }
 .blurred-shadow {
   box-shadow: 0px 0px 60px #dbdbdb !important;
