@@ -508,7 +508,7 @@ export default Vue.extend({
         .then((result) => {
           // console.log(result);
           this.remoteFileList = this.processStorageList(result);
-          this.getStorageUsage(this.remoteFileList);
+          this.getStorageUsage(result);
           //console.warn(this.remoteFileList);
           this.currentPath = this.initPath;
           this.isListLoading = false;
@@ -517,13 +517,14 @@ export default Vue.extend({
     },
     getStorageUsage(fileList: Record<string, any>) {
       let usedStorage = 0;
-      for (const fileKey in fileList) {
-        usedStorage += +fileList[fileKey].__data.size;
-      }
+
+      fileList.forEach((file: Record<string, any>) => {
+        usedStorage += +file.size;
+      });
 
       this.usedStorage = usedStorage;
       this.$store.commit("Storage/setUsedStorage", usedStorage);
-      //console.log(usedStorage / (1024 * 1024));
+      console.log("Used storage", usedStorage / (1024 * 1024));
     },
     processStorageList(results: S3ProviderListOutput) {
       const filesystem: Record<string, any> = {};
@@ -638,6 +639,17 @@ export default Vue.extend({
       }
       // console.log(signedURL);
     },
+    isFolderEmpty(folderPath: string) {
+      var pathVars = this.currentPath.split("/");
+      var currentPathObj = this.remoteFileList;
+      for (let index = 0; index < pathVars.length; index++) {
+        if (pathVars[index] !== "") {
+          currentPathObj = currentPathObj[pathVars[index]];
+        }
+      }
+      console.log("Pathvars:", pathVars);
+      // console.log()
+    },
   },
   computed: {
     getMultipleState() {
@@ -668,6 +680,7 @@ export default Vue.extend({
         };
       }
     },
+
     getFilesAtPath() {
       const searchText = this.$store.getters["Storage/getSearchText"].trim();
       // if (searchText === "") {
@@ -697,8 +710,8 @@ export default Vue.extend({
             currentPathObj = currentPathObj[pathVars[index]];
           }
         }
-        console.log("current path object");
-        console.log(JSON.stringify(currentPathObj));
+        // console.log("current path object");
+        //  console.log(JSON.stringify(currentPathObj));
         let objCopy = Object.assign({}, currentPathObj);
         delete objCopy.__data;
         return objCopy;
