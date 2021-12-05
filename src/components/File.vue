@@ -272,7 +272,7 @@ export default Vue.extend({
     },
     async getPublicAccessState() {
       const result = await this.getPublicFileUrl();
-      console.log(result);
+
       fetch(result.public, { method: "HEAD" }).then((res) => {
         if (res.ok) {
           this.filePublicStatus = { text: "public", color: "green" };
