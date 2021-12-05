@@ -47,7 +47,7 @@
         </v-row>
       </v-container>
       <template v-slot:append>
-        <v-sheet class="mx-3" rounded="lg" color="blue-grey lighten-5">
+        <v-sheet class="mx-3" rounded="lg">
           <v-container>
             <v-row justify="center">
               <v-col>
