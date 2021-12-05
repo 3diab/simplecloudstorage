@@ -2,7 +2,7 @@
   <div>
     <v-card-title
       class="
-        py-4
+        pt-7
         text-h6
         font-weight-medium
         justify-center
