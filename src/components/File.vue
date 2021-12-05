@@ -57,7 +57,7 @@
               icon
               v-for="(contextItem, i) in contextMenuItems"
               :key="i"
-              :disabled="file.__data.key.slice(-1) === '/'"
+              :disabled="!isFolderEmpty(file)"
               v-show="fileHoverState"
               @click="
                 handleFileActionClick(contextItem.action, file.__data.key)
@@ -175,6 +175,14 @@ export default Vue.extend({
     isFolder(fileKey: string) {
       return fileKey.slice(-1) === "/";
     },
+    isFolderEmpty(file: Record<string, any>) {
+      const keys = Object.keys(file);
+      if (keys.length === 1 && keys[0] === "__data") {
+        return true;
+      } else {
+        return false;
+      }
+    },
     getFileType(filename: string) {
       var ext = filename.split(".").pop();
       var folderCheck = filename.slice(-1) === "/";
@@ -284,6 +292,7 @@ export default Vue.extend({
   },
   mounted() {
     this.getPublicAccessState();
+    //console.log("file", this.file);
   },
 });
 </script>
