@@ -20,7 +20,6 @@
             class="mx-auto"
             rounded="lg"
             flat
-            outlined
             :loading="$store.getters['User/getLoginProgressState']"
           >
             <sign-in
@@ -87,7 +86,7 @@ export default Vue.extend({
   border-bottom-color: #0000001f !important;
 }
 .v-application {
-  background-color: #fafafa !important;
+  background-color: #eceff1 !important;
 }
 .blurred-shadow {
   box-shadow: 0px 0px 60px #dbdbdb !important;
