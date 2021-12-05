@@ -183,17 +183,27 @@
           <v-divider></v-divider>
 
           <v-card-actions>
-            <v-checkbox
-              v-model="isFileUploadPrivate"
-              label="private"
-              v-if="false"
-            ></v-checkbox>
+            <span
+              v-if="getUploadValidity.valid"
+              class="blue-grey--text text--darken-2 text-subtitle-2"
+              >Available:
+              <span class="font-weight-bold text-subtitle-2">
+                {{ getUploadValidity.storageLeft }}</span
+              ></span
+            >
+            <span
+              v-if="!getUploadValidity.valid"
+              class="red--text text--darken-2 text-subtitle-2"
+              >Storage Limit Exceeded</span
+            >
             <v-spacer></v-spacer>
             <v-btn
               color="primary"
               @click="StartUpload()"
               text
-              :disabled="isUploading || fileList.length === 0"
+              :disabled="
+                isUploading || fileList.length === 0 || !getUploadValidity.valid
+              "
             >
               upload
             </v-btn>
@@ -323,6 +333,8 @@ export default Vue.extend({
     navigationHistory: [] as string[],
     remoteFileList: {} as Record<string, any>,
     newFolderNameValid: true,
+    usedStorage: 0,
+    isStorageLimitChecked: false,
     folderNameRules: [
       (v: string) => !!v || "Folder name is required",
       (v: string) =>
@@ -496,11 +508,22 @@ export default Vue.extend({
         .then((result) => {
           // console.log(result);
           this.remoteFileList = this.processStorageList(result);
-          // console.warn(this.remoteFileList);
+          this.getStorageUsage(this.remoteFileList);
+          //console.warn(this.remoteFileList);
           this.currentPath = this.initPath;
           this.isListLoading = false;
         })
         .catch((err) => console.log(err));
+    },
+    getStorageUsage(fileList: Record<string, any>) {
+      let usedStorage = 0;
+      for (const fileKey in fileList) {
+        usedStorage += +fileList[fileKey].__data.size;
+      }
+
+      this.usedStorage = usedStorage;
+      this.$store.commit("Storage/setUsedStorage", usedStorage);
+      //console.log(usedStorage / (1024 * 1024));
     },
     processStorageList(results: S3ProviderListOutput) {
       const filesystem: Record<string, any> = {};
@@ -528,7 +551,7 @@ export default Vue.extend({
           delete filesystem[excludedPath];
         }
       });
-      console.log(filesystem);
+      // console.log(filesystem);
       return filesystem;
     },
     formatBytes(bytes: number, decimals = 2) {
@@ -620,6 +643,30 @@ export default Vue.extend({
     getMultipleState() {
       // console.log(this.ctrlPressed);
       return this.ctrlPressed;
+    },
+    getUploadValidity() {
+      let totalUploadSize = 0;
+
+      this.fileList.forEach((file: File) => {
+        totalUploadSize += file.size;
+      });
+      const storageLeft =
+        this.$store.getters["Storage/getStorageLimit"] -
+        this.$store.getters["Storage/getUsedStorage"];
+      const storageAfterUpload = storageLeft - totalUploadSize;
+      const left = `${Math.floor(storageAfterUpload / (1024 * 1024))} MB`;
+      const validity = {
+        valid: false,
+        storageLeft: left,
+      };
+      if (storageAfterUpload < 0) {
+        return validity;
+      } else {
+        return {
+          valid: true,
+          storageLeft: left,
+        };
+      }
     },
     getFilesAtPath() {
       const searchText = this.$store.getters["Storage/getSearchText"].trim();

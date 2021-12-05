@@ -165,6 +165,21 @@ const getters: GetterTree<State, unknown> = {
   getUser: (state) => {
     return state.authenticatedUser;
   },
+  getUserGroups: (state) => {
+    if (state.authenticatedUser) {
+      const groups =
+        state.authenticatedUser.signInUserSession.accessToken.payload[
+          "cognito:groups"
+        ];
+      if (groups) {
+        return groups;
+      } else {
+        return [];
+      }
+    } else {
+      return [];
+    }
+  },
   getUserEmail: (state) => {
     if (state.authenticatedUser) {
       const userEmail = state.authenticatedUser["attributes"].email;

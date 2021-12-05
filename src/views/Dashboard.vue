@@ -47,8 +47,31 @@
         </v-row>
       </v-container>
       <template v-slot:append>
-        <div class="pa-2">
-          <v-btn @click="signOut()" block depressed color="grey darken-3" dark>
+        <v-sheet class="mx-3" rounded="lg" color="blue-grey lighten-5">
+          <v-container>
+            <v-row justify="center">
+              <v-col>
+                <span class="grey--text text--darken-2 font-weight-medium">
+                  <v-icon class="mr-2 mb-2">mdi-cloud</v-icon> Storage</span
+                >
+                <v-progress-linear
+                  color="blue"
+                  rounded
+                  :value="$store.getters['Storage/getUsedPercentage']"
+                  class="my-2"
+                ></v-progress-linear>
+                <span class="text-body-2 text-center grey--text text--darken-1"
+                  >{{ $store.getters["Storage/getFormattedUsedStorage"] }} of
+                  {{ $store.getters["Storage/getFormattedStorageLimit"] }}
+                  consumed</span
+                >
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-sheet>
+
+        <div class="pa-2 mt-4">
+          <v-btn @click="signOut()" block depressed color="grey darken-2" dark>
             Logout
           </v-btn>
         </div>
@@ -146,8 +169,8 @@
 
     <v-app-bar app absolute flat color="transparent">
       <v-app-bar-nav-icon @click="toggleLeftSidebar()"></v-app-bar-nav-icon>
-      <v-row justify="end" no-gutters>
-        <v-col cols="8">
+      <v-row justify="start" no-gutters>
+        <v-col cols="5">
           <v-text-field
             solo
             label="Search"
@@ -177,7 +200,7 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
-
+import Auth from "@aws-amplify/auth";
 export default Vue.extend({
   name: "Dashboard",
   data: () => ({
@@ -267,6 +290,12 @@ export default Vue.extend({
   },
   mounted() {
     this.isMounted = true;
+    Auth.currentAuthenticatedUser({
+      bypassCache: false, // Optional, By default is false. If set to true, this call will send a request to Cognito to get the latest user data
+    }).then((user) => {
+      console.log(user);
+    });
+    this.$store.dispatch("Storage/getStorageLimit");
   },
 });
 </script>
