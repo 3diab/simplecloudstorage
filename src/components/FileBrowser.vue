@@ -1,20 +1,22 @@
 <template>
   <div>
-    <v-dialog v-model="deleteDialog" persistent max-width="290">
+    <v-dialog v-model="deleteDialog" persistent width="300">
       <v-card>
-        <v-card-title class="text-h5"> Confirm Delete? </v-card-title>
-        <v-card-text>Delete {{ deleteFileName }}</v-card-text>
+        <v-card-title class="text-subtitle-1"> Confirm Delete? </v-card-title>
+        <v-card-text>
+          <span class="font-weight-medium">{{ deleteFileName }}</span>
+        </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
+          <v-btn color="red darken-1" text @click="deleteDialog = false">
+            cancel
+          </v-btn>
           <v-btn
             color="green darken-1"
             text
             @click="RemoveRemoteFile(deleteFileName)"
           >
             confirm
-          </v-btn>
-          <v-btn color="green darken-1" text @click="deleteDialog = false">
-            cancel
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -60,7 +62,7 @@
             v-bind="attrs"
             v-on="on"
             depressed
-            color="blue accent-3"
+            color="blue "
             class="white--text"
             large
             icon
@@ -119,7 +121,7 @@
             v-bind="attrs"
             v-on="on"
             depressed
-            color="blue accent-3"
+            color="blue "
             class="white--text mr-5"
             icon
             large
@@ -639,17 +641,6 @@ export default Vue.extend({
       }
       // console.log(signedURL);
     },
-    isFolderEmpty(folderPath: string) {
-      var pathVars = this.currentPath.split("/");
-      var currentPathObj = this.remoteFileList;
-      for (let index = 0; index < pathVars.length; index++) {
-        if (pathVars[index] !== "") {
-          currentPathObj = currentPathObj[pathVars[index]];
-        }
-      }
-      console.log("Pathvars:", pathVars);
-      // console.log()
-    },
   },
   computed: {
     getMultipleState() {
@@ -706,6 +697,8 @@ export default Vue.extend({
         var pathVars = this.currentPath.split("/");
         var currentPathObj = this.remoteFileList;
         for (let index = 0; index < pathVars.length; index++) {
+          console.log(pathVars[index]);
+
           if (pathVars[index] !== "") {
             currentPathObj = currentPathObj[pathVars[index]];
           }

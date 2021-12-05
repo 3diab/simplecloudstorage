@@ -86,10 +86,10 @@
       <v-card flat tile>
         <v-card-title
           class="
-            text text-truncate
+            text-subtitle-1 text text-truncate
             blue-grey--text
             text--darken-2
-            font-weight-regular
+            font-weight-medium
           "
         >
           Details
@@ -104,8 +104,13 @@
           <v-container>
             <v-row>
               <v-col>
-                <v-chip color="blue" small outlined label dark class="mb-2"
-                  >Name</v-chip
+                <v-chip
+                  color="blue"
+                  small
+                  label
+                  dark
+                  class="mb-2 font-weight-bold"
+                  >Filename</v-chip
                 >
                 <br />
                 <span class="text-subtitle-1 font-weight-bold">
@@ -115,14 +120,21 @@
             </v-row>
             <v-row>
               <v-col>
-                <v-chip color="pink" small label outlined dark class="mb-3"
+                <v-chip
+                  color="teal"
+                  small
+                  label
+                  dark
+                  class="mb-3 font-weight-bold"
                   >Public Url</v-chip
                 >
                 <v-text-field
                   :disabled="getSelectedFile.__data.key.slice(-1) === '/'"
                   :value="$store.getters['Main/getCurrentUrls'].public"
                   append-outer-icon="mdi-content-copy"
-                  outlined
+                  solo
+                  background-color="blue-grey lighten-5"
+                  flat
                   dense
                   readonly
                   hide-details=""
@@ -133,7 +145,16 @@
             </v-row>
             <v-row>
               <v-col>
-                <v-chip color="green" small label outlined dark class="mb-2"
+                <v-chip
+                  color="green"
+                  small
+                  label
+                  dark
+                  class="mb-2 font-weight-bold"
+                  v-if="
+                    getPreviewUrl.category === 'model' ||
+                    getPreviewUrl.category === 'image'
+                  "
                   >Preview</v-chip
                 >
                 <v-sheet
@@ -169,7 +190,7 @@
 
     <v-app-bar app absolute flat color="transparent">
       <v-app-bar-nav-icon @click="toggleLeftSidebar()"></v-app-bar-nav-icon>
-      <v-row justify="start" no-gutters>
+      <v-row justify="end" no-gutters>
         <v-col cols="5">
           <v-text-field
             solo
