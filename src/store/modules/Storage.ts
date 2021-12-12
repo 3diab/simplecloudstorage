@@ -9,7 +9,7 @@ type State = {
 const state: State = {
   searchText: "",
   usedStorage: 0,
-  storageLimit: 1024 * 1024 * 100,
+  storageLimit: 1024 * 1024 * 1024,
   isStorageLimitChecked: false,
 };
 
