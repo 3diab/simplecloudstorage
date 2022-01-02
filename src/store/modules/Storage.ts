@@ -34,6 +34,10 @@ const actions: ActionTree<State, unknown> = {
       }
     });
   },
+  generateManifest({ commit, rootGetters }) {
+    //get selected file from main and generate manifest
+    const selectedFile = rootGetters["Main/getSelectedFile"];
+  },
 };
 
 const mutations: MutationTree<State> = {

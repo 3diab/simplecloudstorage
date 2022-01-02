@@ -433,7 +433,7 @@ export default Vue.extend({
           this.$refs.newfolderform as Vue & { validate: () => boolean }
         ).validate()
       ) {
-        console.log("Validation passed for create folder");
+        //console.log("Validation passed for create folder");
         this.CreateNewFolder();
       }
     },
@@ -464,7 +464,7 @@ export default Vue.extend({
     },
     async UploadSingleFile(file: File) {
       let fullFileName = this.currentPath + file.name;
-      console.log("Uploading to:" + fullFileName);
+      // console.log("Uploading to:" + fullFileName);
       var id = fullFileName; //uuidv4();
       // this.fileUploadProgress[id] = {
       //   filename: file.name,
@@ -526,7 +526,7 @@ export default Vue.extend({
 
       this.usedStorage = usedStorage;
       this.$store.commit("Storage/setUsedStorage", usedStorage);
-      console.log("Used storage", usedStorage / (1024 * 1024));
+      // console.log("Used storage", usedStorage / (1024 * 1024));
     },
     processStorageList(results: S3ProviderListOutput) {
       const filesystem: Record<string, any> = {};
@@ -747,7 +747,7 @@ export default Vue.extend({
   },
   mounted() {
     this.listRemote(this.initPath);
-    console.log("Init Path :" + this.initPath);
+    //console.log("Init Path :" + this.initPath);
     document.addEventListener(
       "drag",
       function (event) {

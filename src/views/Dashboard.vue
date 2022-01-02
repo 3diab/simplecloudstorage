@@ -81,7 +81,8 @@
       app
       floating
       right
-      v-if="$store.getters['Main/getRightSidebarState']"
+      v-model="getRightSidebarState"
+      disable-resize-watcher
     >
       <v-card flat tile>
         <v-card-title
@@ -101,16 +102,11 @@
 
         <v-divider></v-divider>
         <v-card-text>
-          <v-container>
+          <v-container class="mt-n4">
             <v-row>
               <v-col>
-                <v-chip
-                  color="blue"
-                  small
-                  label
-                  dark
-                  class="mb-2 font-weight-bold"
-                  >Filename</v-chip
+                <span class="text-subtitle-2 blue--text font-weight-medium"
+                  >Name</span
                 >
                 <br />
                 <span class="text-subtitle-1 font-weight-bold">
@@ -118,17 +114,16 @@
                 >
               </v-col>
             </v-row>
+
             <v-row>
               <v-col>
-                <v-chip
-                  color="teal"
-                  small
-                  label
-                  dark
-                  class="mb-3 font-weight-bold"
-                  >Public Url</v-chip
+                <span
+                  class="text-subtitle-2 blue--text font-weight-medium"
+                  v-if="getPreviewUrl.category !== 'folder'"
+                  >Public URL</span
                 >
                 <v-text-field
+                  v-if="getPreviewUrl.category !== 'folder'"
                   :disabled="getSelectedFile.__data.key.slice(-1) === '/'"
                   :value="$store.getters['Main/getCurrentUrls'].public"
                   append-outer-icon="mdi-content-copy"
@@ -145,17 +140,13 @@
             </v-row>
             <v-row>
               <v-col>
-                <v-chip
-                  color="green"
-                  small
-                  label
-                  dark
-                  class="mb-2 font-weight-bold"
+                <span
                   v-if="
                     getPreviewUrl.category === 'model' ||
                     getPreviewUrl.category === 'image'
                   "
-                  >Preview</v-chip
+                  class="text-subtitle-2 blue--text font-weight-medium"
+                  >Preview</span
                 >
                 <v-sheet
                   outlined
@@ -266,12 +257,20 @@ export default Vue.extend({
     },
   },
   computed: {
+    getRightSidebarState: {
+      get() {
+        return this.$store.getters["Main/getRightSidebarState"];
+      },
+      set(value) {
+        this.$store.commit("Main/setRightSidebarState", value);
+      },
+    },
     getSelectedFile() {
       const selectedFile = this.$store.getters["Main/getSelectedFile"];
       if (selectedFile) {
         return selectedFile;
       } else {
-        return {};
+        return { __data: { key: "" } };
       }
     },
 
@@ -284,6 +283,7 @@ export default Vue.extend({
         const fileExt = fileName.split(".").pop();
         const isFolder = fileName.slice(-1) === "/";
         if (isFolder) {
+          urlObject.category = "folder";
           return urlObject;
         }
         switch (fileExt) {
