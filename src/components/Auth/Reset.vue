@@ -1,10 +1,19 @@
 <template>
   <div>
-    <v-card-title class="py-4 text-h6 font-weight-medium justify-center">
+    <v-card-title
+      class="
+        pt-7
+        text-h6
+        font-weight-medium
+        justify-center
+        grey--text
+        text--darken-2
+      "
+    >
       <span>RESET PASSWORD</span>
     </v-card-title>
 
-    <v-card-text>
+    <v-card-text class="mt-4">
       <v-row justify="center">
         <v-col cols="10">
           <v-form
@@ -63,7 +72,7 @@
             </p>
 
             <v-btn
-              color="grey darken-3"
+              color="blue-grey darken-2"
               @click="validateResetPassword"
               block
               depressed

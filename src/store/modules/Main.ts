@@ -7,7 +7,7 @@ type State = {
 };
 const state: State = {
   rightSidebarState: false,
-  selectedFile: {},
+  selectedFile: { __data: { key: "" } },
   currentUrls: { temporary: "", public: "" },
 };
 

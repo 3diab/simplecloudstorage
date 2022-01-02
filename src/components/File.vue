@@ -14,21 +14,28 @@
     <v-list-item-content>
       <v-row>
         <v-col cols="4" align-self="center"
-          ><v-list-item-title class="grey--text text--darken-4">{{
-            isFolder(file.__data.key)
-              ? file.__data.key.slice(0, -1).split("/").pop()
-              : file.__data.key.split("/").pop()
-          }}</v-list-item-title></v-col
+          ><v-list-item-title
+            class="
+              text-subtitle-1
+              font-weight-regular
+              grey--text
+              text--darken-2
+            "
+            >{{
+              isFolder(file.__data.key)
+                ? file.__data.key.slice(0, -1).split("/").pop()
+                : file.__data.key.split("/").pop()
+            }}</v-list-item-title
+          ></v-col
         >
         <v-col cols="2" align-self="center"
           ><v-list-item-title class="grey--text text--darken-1">
             <v-chip
               v-if="filePublicStatus"
               small
-              outlined
+              pill
               :color="filePublicStatus.color"
               dark
-              label
             >
               {{ filePublicStatus.text }}
             </v-chip>
@@ -50,7 +57,7 @@
               icon
               v-for="(contextItem, i) in contextMenuItems"
               :key="i"
-              :disabled="file.__data.key.slice(-1) === '/'"
+              :disabled="!isFolderEmpty(file)"
               v-show="fileHoverState"
               @click="
                 handleFileActionClick(contextItem.action, file.__data.key)
@@ -168,6 +175,14 @@ export default Vue.extend({
     isFolder(fileKey: string) {
       return fileKey.slice(-1) === "/";
     },
+    isFolderEmpty(file: Record<string, any>) {
+      const keys = Object.keys(file);
+      if (keys.length === 1 && keys[0] === "__data") {
+        return true;
+      } else {
+        return false;
+      }
+    },
     getFileType(filename: string) {
       var ext = filename.split(".").pop();
       var folderCheck = filename.slice(-1) === "/";
@@ -265,18 +280,19 @@ export default Vue.extend({
     },
     async getPublicAccessState() {
       const result = await this.getPublicFileUrl();
-      console.log(result);
+
       fetch(result.public, { method: "HEAD" }).then((res) => {
         if (res.ok) {
-          this.filePublicStatus = { text: "public", color: "red" };
+          this.filePublicStatus = { text: "public", color: "green" };
         } else if (res.status === 403) {
-          this.filePublicStatus = { text: "private", color: "green" };
+          this.filePublicStatus = { text: "private", color: "blue-grey" };
         }
       });
     },
   },
   mounted() {
     this.getPublicAccessState();
+    //console.log("file", this.file);
   },
 });
 </script>

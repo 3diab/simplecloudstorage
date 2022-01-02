@@ -24,15 +24,20 @@
                 :key="item.title"
                 link
                 :to="item.to"
-                color="light-blue darken-2"
+                color="blue-grey lighten-2"
               >
-                <v-list-item-icon>
-                  <v-icon>{{ item.icon }}</v-icon>
+                <v-list-item-icon class="ml-3">
+                  <v-icon color="blue-grey darken-2">{{ item.icon }}</v-icon>
                 </v-list-item-icon>
 
                 <v-list-item-content>
                   <v-list-item-title
-                    class="font-weight-medium text-subtitle-1"
+                    class="
+                      font-weight-medium
+                      text-subtitle-2
+                      blue-grey--text
+                      text--darken-2
+                    "
                     >{{ item.title }}</v-list-item-title
                   >
                 </v-list-item-content>
@@ -42,8 +47,31 @@
         </v-row>
       </v-container>
       <template v-slot:append>
-        <div class="pa-2">
-          <v-btn @click="signOut()" block depressed color="grey darken-3" dark>
+        <v-sheet class="mx-3" rounded="lg">
+          <v-container>
+            <v-row justify="center">
+              <v-col>
+                <span class="grey--text text--darken-2 font-weight-medium">
+                  <v-icon class="mr-2 mb-2">mdi-cloud</v-icon> Storage</span
+                >
+                <v-progress-linear
+                  color="blue"
+                  rounded
+                  :value="$store.getters['Storage/getUsedPercentage']"
+                  class="my-2"
+                ></v-progress-linear>
+                <span class="text-body-2 text-center grey--text text--darken-1"
+                  >{{ $store.getters["Storage/getFormattedUsedStorage"] }} of
+                  {{ $store.getters["Storage/getFormattedStorageLimit"] }}
+                  consumed</span
+                >
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-sheet>
+
+        <div class="pa-2 mt-4">
+          <v-btn @click="signOut()" block depressed color="grey darken-2" dark>
             Logout
           </v-btn>
         </div>
@@ -53,37 +81,98 @@
       app
       floating
       right
-      v-if="$store.getters['Main/getRightSidebarState']"
+      v-model="getRightSidebarState"
+      disable-resize-watcher
     >
       <v-card flat tile>
-        <v-toolbar flat dense>
-          <v-toolbar-title>
-            {{ getSelectedFile.__data.key }}
-          </v-toolbar-title>
+        <v-card-title
+          class="
+            text-subtitle-1 text text-truncate
+            blue-grey--text
+            text--darken-2
+            font-weight-medium
+          "
+        >
+          Details
           <v-spacer></v-spacer>
           <v-btn small icon @click="closeRightSidebar()"
             ><v-icon>mdi-close</v-icon></v-btn
           >
-        </v-toolbar>
-
-        <v-card-subtitle></v-card-subtitle>
+        </v-card-title>
 
         <v-divider></v-divider>
         <v-card-text>
-          <v-container>
+          <v-container class="mt-n4">
             <v-row>
-              <v-text-field
-                :disabled="getSelectedFile.__data.key.slice(-1) === '/'"
-                :value="$store.getters['Main/getCurrentUrls'].public"
-                append-outer-icon="mdi-content-copy"
-                outlined
-                dense
-                readonly
-                clearable
-                label="Public URl"
-                type="text"
-                @click:append-outer="copyUrl('public')"
-              ></v-text-field>
+              <v-col>
+                <span class="text-subtitle-2 blue--text font-weight-medium"
+                  >Name</span
+                >
+                <br />
+                <span class="text-subtitle-1 font-weight-bold">
+                  {{ getSelectedFile.__data.key }}</span
+                >
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col>
+                <span
+                  class="text-subtitle-2 blue--text font-weight-medium"
+                  v-if="getPreviewUrl.category !== 'folder'"
+                  >Public URL</span
+                >
+                <v-text-field
+                  v-if="getPreviewUrl.category !== 'folder'"
+                  :disabled="getSelectedFile.__data.key.slice(-1) === '/'"
+                  :value="$store.getters['Main/getCurrentUrls'].public"
+                  append-outer-icon="mdi-content-copy"
+                  solo
+                  background-color="blue-grey lighten-5"
+                  flat
+                  dense
+                  readonly
+                  hide-details=""
+                  type="text"
+                  @click:append-outer="copyUrl('public')"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <span
+                  v-if="
+                    getPreviewUrl.category === 'model' ||
+                    getPreviewUrl.category === 'image'
+                  "
+                  class="text-subtitle-2 blue--text font-weight-medium"
+                  >Preview</span
+                >
+                <v-sheet
+                  outlined
+                  rounded="lg"
+                  class="pa-2 mt-2"
+                  v-if="getPreviewUrl.category === 'image'"
+                >
+                  <v-img :src="getPreviewUrl.url" contain></v-img>
+                </v-sheet>
+                <v-sheet
+                  outlined
+                  rounded="lg"
+                  class="pa-2 mt-2"
+                  v-if="getPreviewUrl.category === 'model'"
+                >
+                  <div>
+                    <model-viewer
+                      camera-controls
+                      loading="eager"
+                      reveal="auto"
+                      style="width: 180px; background-color: grey"
+                      :src="getPreviewUrl.url"
+                    ></model-viewer>
+                  </div>
+                </v-sheet>
+              </v-col>
             </v-row>
           </v-container>
         </v-card-text>
@@ -93,7 +182,7 @@
     <v-app-bar app absolute flat color="transparent">
       <v-app-bar-nav-icon @click="toggleLeftSidebar()"></v-app-bar-nav-icon>
       <v-row justify="end" no-gutters>
-        <v-col cols="8">
+        <v-col cols="5">
           <v-text-field
             solo
             label="Search"
@@ -123,12 +212,14 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
+import Auth from "@aws-amplify/auth";
 export default Vue.extend({
   name: "Dashboard",
   data: () => ({
     rightSidebar: true,
     leftSidebar: true,
     searchText: "",
+    isMounted: false,
     mainMenuItems: [
       { title: "My Files", icon: "mdi-folder", to: { name: "Browser" } },
 
@@ -166,14 +257,66 @@ export default Vue.extend({
     },
   },
   computed: {
+    getRightSidebarState: {
+      get() {
+        return this.$store.getters["Main/getRightSidebarState"];
+      },
+      set(value) {
+        this.$store.commit("Main/setRightSidebarState", value);
+      },
+    },
     getSelectedFile() {
       const selectedFile = this.$store.getters["Main/getSelectedFile"];
       if (selectedFile) {
         return selectedFile;
       } else {
-        return {};
+        return { __data: { key: "" } };
       }
     },
+
+    getPreviewUrl() {
+      const selectedFile = this.$store.getters["Main/getSelectedFile"];
+      const urlObject = { category: "", url: "" };
+
+      if (selectedFile) {
+        const fileName = selectedFile.__data.key;
+        const fileExt = fileName.split(".").pop();
+        const isFolder = fileName.slice(-1) === "/";
+        if (isFolder) {
+          urlObject.category = "folder";
+          return urlObject;
+        }
+        switch (fileExt) {
+          case "jpg":
+          case "png":
+          case "gif":
+            urlObject.category = "image";
+            urlObject.url =
+              this.$store.getters["Main/getCurrentUrls"].temporary;
+            return urlObject;
+          case "usdz":
+          case "gltf":
+          case "glb":
+            urlObject.category = "model";
+            urlObject.url =
+              this.$store.getters["Main/getCurrentUrls"].temporary;
+            return urlObject;
+          default:
+            return urlObject;
+        }
+      } else {
+        return "";
+      }
+    },
+  },
+  mounted() {
+    this.isMounted = true;
+    Auth.currentAuthenticatedUser({
+      bypassCache: false, // Optional, By default is false. If set to true, this call will send a request to Cognito to get the latest user data
+    }).then((user) => {
+      console.log(user);
+    });
+    this.$store.dispatch("Storage/getStorageLimit");
   },
 });
 </script>
@@ -185,6 +328,9 @@ export default Vue.extend({
   border-bottom-color: #0000001f !important;
 }
 .v-application {
-  background-color: #e9e9e9 !important;
+  background-color: #eceff1 !important;
+}
+.round-border {
+  border-radius: 100px !important;
 }
 </style>

@@ -1,20 +1,22 @@
 <template>
   <div>
-    <v-dialog v-model="deleteDialog" persistent max-width="290">
+    <v-dialog v-model="deleteDialog" persistent width="300">
       <v-card>
-        <v-card-title class="text-h5"> Confirm Delete? </v-card-title>
-        <v-card-text>Delete {{ deleteFileName }}</v-card-text>
+        <v-card-title class="text-subtitle-1"> Confirm Delete? </v-card-title>
+        <v-card-text>
+          <span class="font-weight-medium">{{ deleteFileName }}</span>
+        </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
+          <v-btn color="red darken-1" text @click="deleteDialog = false">
+            cancel
+          </v-btn>
           <v-btn
             color="green darken-1"
             text
             @click="RemoveRemoteFile(deleteFileName)"
           >
             confirm
-          </v-btn>
-          <v-btn color="green darken-1" text @click="deleteDialog = false">
-            cancel
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -42,7 +44,7 @@
       <v-icon>mdi-content-copy</v-icon> Temporary link copied to clipboard
     </v-snackbar>
 
-    <v-toolbar flat rounded="lg">
+    <v-toolbar rounded="lg" flat>
       <v-btn icon color="grey" @click="navigateBack()">
         <v-icon>mdi-chevron-left</v-icon>
       </v-btn>
@@ -60,7 +62,7 @@
             v-bind="attrs"
             v-on="on"
             depressed
-            color="blue"
+            color="blue "
             class="white--text"
             large
             icon
@@ -119,7 +121,7 @@
             v-bind="attrs"
             v-on="on"
             depressed
-            color="blue"
+            color="blue "
             class="white--text mr-5"
             icon
             large
@@ -183,17 +185,27 @@
           <v-divider></v-divider>
 
           <v-card-actions>
-            <v-checkbox
-              v-model="isFileUploadPrivate"
-              label="private"
-              v-if="false"
-            ></v-checkbox>
+            <span
+              v-if="getUploadValidity.valid"
+              class="blue-grey--text text--darken-2 text-subtitle-2"
+              >Available:
+              <span class="font-weight-bold text-subtitle-2">
+                {{ getUploadValidity.storageLeft }}</span
+              ></span
+            >
+            <span
+              v-if="!getUploadValidity.valid"
+              class="red--text text--darken-2 text-subtitle-2"
+              >Storage Limit Exceeded</span
+            >
             <v-spacer></v-spacer>
             <v-btn
               color="primary"
               @click="StartUpload()"
               text
-              :disabled="isUploading || fileList.length === 0"
+              :disabled="
+                isUploading || fileList.length === 0 || !getUploadValidity.valid
+              "
             >
               upload
             </v-btn>
@@ -201,32 +213,40 @@
         </v-card>
       </v-dialog>
     </v-toolbar>
-
-    <v-card rounded="lg" flat class="my-3">
-      <v-toolbar flat dense height="40" color="grey darken-3" dark>
-        <v-row>
-          <v-col cols="4"
-            ><v-list-item-title class="text-subtitle-2">
-              File Name</v-list-item-title
-            ></v-col
+    <v-toolbar flat dense height="50" color="white" class="my-3" rounded="lg">
+      <v-row>
+        <v-col cols="4"
+          ><v-list-item-title
+            class="text-subtitle-2 blue-grey--text text--darken-2"
           >
-          <v-col cols="2" class="ml-4"
-            ><v-list-item-title class="text-subtitle-2">
-              Access</v-list-item-title
-            >
-          </v-col>
-          <v-col cols="2"
-            ><v-list-item-title class="text-subtitle-2">
-              Size
-            </v-list-item-title>
-          </v-col>
-          <v-col cols="2"
-            ><v-list-item-title class="text-subtitle-2">
-              Type
-            </v-list-item-title>
-          </v-col>
-        </v-row>
-      </v-toolbar>
+            File Name</v-list-item-title
+          ></v-col
+        >
+        <v-col cols="2" class="ml-4"
+          ><v-list-item-title
+            class="text-subtitle-2 blue-grey--text text--darken-2"
+          >
+            Access</v-list-item-title
+          >
+        </v-col>
+        <v-col cols="2"
+          ><v-list-item-title
+            class="text-subtitle-2 blue-grey--text text--darken-2"
+          >
+            Size
+          </v-list-item-title>
+        </v-col>
+        <v-col cols="2"
+          ><v-list-item-title
+            class="text-subtitle-2 blue-grey--text text--darken-2"
+          >
+            Type
+          </v-list-item-title>
+        </v-col>
+      </v-row>
+    </v-toolbar>
+    <v-card rounded="lg" flat class="my-3">
+      <v-card-title class="mb-n5"> </v-card-title>
 
       <v-progress-linear
         color="blue lighten-1"
@@ -234,7 +254,7 @@
         :active="isListLoading"
         height="4"
       ></v-progress-linear>
-      <v-divider></v-divider>
+
       <v-list class="mt-n2">
         <v-alert
           dense
@@ -248,10 +268,10 @@
         </v-alert>
         <v-list-item-group
           v-model="selectedFile"
-          color="primary"
+          color="grey "
           :multiple="getMultipleState"
         >
-          <template v-for="(file, i) in getFilesAtPath">
+          <template v-for="(file, i, index) in getFilesAtPath">
             <file
               :key="i"
               :file="file"
@@ -259,7 +279,10 @@
               v-on:delete-file="confirmDelete"
               v-on:link-copied="showLinkSnackbar"
             ></file>
-            <v-divider :key="i + 'div'"></v-divider>
+            <v-divider
+              v-if="index != Object.keys(getFilesAtPath).length - 1"
+              :key="i + 'div'"
+            ></v-divider>
           </template>
         </v-list-item-group>
       </v-list>
@@ -312,6 +335,8 @@ export default Vue.extend({
     navigationHistory: [] as string[],
     remoteFileList: {} as Record<string, any>,
     newFolderNameValid: true,
+    usedStorage: 0,
+    isStorageLimitChecked: false,
     folderNameRules: [
       (v: string) => !!v || "Folder name is required",
       (v: string) =>
@@ -408,7 +433,7 @@ export default Vue.extend({
           this.$refs.newfolderform as Vue & { validate: () => boolean }
         ).validate()
       ) {
-        console.log("Validation passed for create folder");
+        //console.log("Validation passed for create folder");
         this.CreateNewFolder();
       }
     },
@@ -439,7 +464,7 @@ export default Vue.extend({
     },
     async UploadSingleFile(file: File) {
       let fullFileName = this.currentPath + file.name;
-      console.log("Uploading to:" + fullFileName);
+      // console.log("Uploading to:" + fullFileName);
       var id = fullFileName; //uuidv4();
       // this.fileUploadProgress[id] = {
       //   filename: file.name,
@@ -485,11 +510,23 @@ export default Vue.extend({
         .then((result) => {
           // console.log(result);
           this.remoteFileList = this.processStorageList(result);
-          // console.warn(this.remoteFileList);
+          this.getStorageUsage(result);
+          //console.warn(this.remoteFileList);
           this.currentPath = this.initPath;
           this.isListLoading = false;
         })
         .catch((err) => console.log(err));
+    },
+    getStorageUsage(fileList: Record<string, any>) {
+      let usedStorage = 0;
+
+      fileList.forEach((file: Record<string, any>) => {
+        usedStorage += +file.size;
+      });
+
+      this.usedStorage = usedStorage;
+      this.$store.commit("Storage/setUsedStorage", usedStorage);
+      // console.log("Used storage", usedStorage / (1024 * 1024));
     },
     processStorageList(results: S3ProviderListOutput) {
       const filesystem: Record<string, any> = {};
@@ -517,7 +554,7 @@ export default Vue.extend({
           delete filesystem[excludedPath];
         }
       });
-      console.log(filesystem);
+      // console.log(filesystem);
       return filesystem;
     },
     formatBytes(bytes: number, decimals = 2) {
@@ -610,6 +647,31 @@ export default Vue.extend({
       // console.log(this.ctrlPressed);
       return this.ctrlPressed;
     },
+    getUploadValidity() {
+      let totalUploadSize = 0;
+
+      this.fileList.forEach((file: File) => {
+        totalUploadSize += file.size;
+      });
+      const storageLeft =
+        this.$store.getters["Storage/getStorageLimit"] -
+        this.$store.getters["Storage/getUsedStorage"];
+      const storageAfterUpload = storageLeft - totalUploadSize;
+      const left = `${Math.floor(storageAfterUpload / (1024 * 1024))} MB`;
+      const validity = {
+        valid: false,
+        storageLeft: left,
+      };
+      if (storageAfterUpload < 0) {
+        return validity;
+      } else {
+        return {
+          valid: true,
+          storageLeft: left,
+        };
+      }
+    },
+
     getFilesAtPath() {
       const searchText = this.$store.getters["Storage/getSearchText"].trim();
       // if (searchText === "") {
@@ -635,12 +697,14 @@ export default Vue.extend({
         var pathVars = this.currentPath.split("/");
         var currentPathObj = this.remoteFileList;
         for (let index = 0; index < pathVars.length; index++) {
+          console.log(pathVars[index]);
+
           if (pathVars[index] !== "") {
             currentPathObj = currentPathObj[pathVars[index]];
           }
         }
-        console.log("current path object");
-        console.log(JSON.stringify(currentPathObj));
+        // console.log("current path object");
+        //  console.log(JSON.stringify(currentPathObj));
         let objCopy = Object.assign({}, currentPathObj);
         delete objCopy.__data;
         return objCopy;
@@ -683,7 +747,7 @@ export default Vue.extend({
   },
   mounted() {
     this.listRemote(this.initPath);
-    console.log("Init Path :" + this.initPath);
+    //console.log("Init Path :" + this.initPath);
     document.addEventListener(
       "drag",
       function (event) {
