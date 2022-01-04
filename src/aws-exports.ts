@@ -3,10 +3,10 @@
 
 const awsmobile = {
     "aws_project_region": "eu-north-1",
-    "aws_cognito_identity_pool_id": "eu-north-1:89aab975-bb8f-489f-9e91-99d032f59bbb",
+    "aws_cognito_identity_pool_id": "eu-north-1:127eb495-0045-4fb1-a91c-25d1fdb0baa6",
     "aws_cognito_region": "eu-north-1",
-    "aws_user_pools_id": "eu-north-1_E4hfKBxF5",
-    "aws_user_pools_web_client_id": "lor9bebunu1dbtpqp8ulv3u9k",
+    "aws_user_pools_id": "eu-north-1_uRPMiS4K9",
+    "aws_user_pools_web_client_id": "670om5hdmg9863k4fflt41279g",
     "oauth": {},
     "aws_cognito_username_attributes": [
         "EMAIL"
@@ -31,17 +31,17 @@ const awsmobile = {
     "aws_cognito_verification_mechanisms": [
         "EMAIL"
     ],
-    "aws_user_files_s3_bucket": "simplecloudstorageefded4746b7146beb038662f439a393602-staging",
+    "aws_user_files_s3_bucket": "simplecloudstorageefded4746b7146beb038662f439a310319-dev",
     "aws_user_files_s3_bucket_region": "eu-north-1",
-    "aws_content_delivery_bucket": "impleloudtorage-20211121182341-hostingbucket-staging",
-    "aws_content_delivery_bucket_region": "eu-north-1",
-    "aws_content_delivery_url": "http://impleloudtorage-20211121182341-hostingbucket-staging.s3-website.eu-north-1.amazonaws.com",
     "aws_cloud_logic_custom": [
         {
             "name": "MakeObjectPublic",
             "endpoint": "https://3toecrirh7.execute-api.eu-north-1.amazonaws.com/staging",
             "region": "eu-north-1"
         }
+    ],
+    "aws_cognito_login_mechanisms": [
+        "EMAIL"
     ]
 };
 
