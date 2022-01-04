@@ -21,24 +21,14 @@ export type AmplifyDependentResourcesAttributes = {
             "Region": "string",
             "LambdaExecutionRole": "string"
         },
-        "makeObjectPublic": {
-            "Name": "string",
-            "Arn": "string",
-            "Region": "string",
-            "LambdaExecutionRole": "string"
+        "simplecloudstoragescslayer": {
+            "Arn": "string"
         }
     },
     "storage": {
         "SimpleCloudStaging": {
             "BucketName": "string",
             "Region": "string"
-        }
-    },
-    "api": {
-        "MakeObjectPublic": {
-            "RootUrl": "string",
-            "ApiName": "string",
-            "ApiId": "string"
         }
     }
 }

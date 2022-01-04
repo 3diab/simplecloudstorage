@@ -26,10 +26,6 @@
         "makeS3ObjectPublic": {
           "deploymentBucketName": "amplify-simplecloudstorage-staging-93602-deployment",
           "s3Key": "amplify-builds/makeS3ObjectPublic-4156346345484b326569-build.zip"
-        },
-        "makeObjectPublic": {
-          "deploymentBucketName": "amplify-simplecloudstorage-staging-93602-deployment",
-          "s3Key": "amplify-builds/makeObjectPublic-3344396f67784a745a59-build.zip"
         }
       },
       "hosting": {
@@ -37,6 +33,41 @@
           "appId": "df13rfp36ndmu",
           "type": "manual"
         }
+      }
+    }
+  },
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-simplecloudstorage-dev-10319-authRole",
+      "UnauthRoleArn": "arn:aws:iam::150450947532:role/amplify-simplecloudstorage-dev-10319-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::150450947532:role/amplify-simplecloudstorage-dev-10319-authRole",
+      "Region": "eu-north-1",
+      "DeploymentBucketName": "amplify-simplecloudstorage-dev-10319-deployment",
+      "UnauthRoleName": "amplify-simplecloudstorage-dev-10319-unauthRole",
+      "StackName": "amplify-simplecloudstorage-dev-10319",
+      "StackId": "arn:aws:cloudformation:eu-north-1:150450947532:stack/amplify-simplecloudstorage-dev-10319/2db034c0-6d95-11ec-9aa5-0ad4101fa7aa",
+      "AmplifyAppId": "df13rfp36ndmu"
+    },
+    "categories": {
+      "function": {
+        "S3Trigger430ffe51": {
+          "deploymentBucketName": "amplify-simplecloudstorage-dev-10319-deployment",
+          "s3Key": "amplify-builds/S3Trigger430ffe51-317a36776a52494d6b58-build.zip"
+        },
+        "simplecloudstoragescslayer": {
+          "deploymentBucketName": "amplify-simplecloudstorage-dev-10319-deployment",
+          "s3Key": "amplify-builds/simplecloudstoragescslayer-LambdaLayerVersion2b106764-build.zip"
+        }
+      },
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "df13rfp36ndmu",
+          "type": "manual"
+        }
+      },
+      "auth": {
+        "userPoolGroups": {},
+        "simplecloudauth": {}
       }
     }
   }

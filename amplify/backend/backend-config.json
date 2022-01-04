@@ -47,21 +47,13 @@
     "S3Trigger430ffe51": {
       "service": "Lambda",
       "providerPlugin": "awscloudformation",
-      "build": true
-    },
-    "makeObjectPublic": {
       "build": true,
+      "dependsOn": []
+    },
+    "simplecloudstoragescslayer": {
       "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "storage",
-          "resourceName": "SimpleCloudStaging",
-          "attributes": [
-            "BucketName"
-          ]
-        }
-      ]
+      "service": "LambdaLayer",
+      "build": true
     }
   },
   "storage": {
@@ -88,20 +80,5 @@
       "type": "manual"
     }
   },
-  "api": {
-    "MakeObjectPublic": {
-      "service": "API Gateway",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "makeObjectPublic",
-          "attributes": [
-            "Name",
-            "Arn"
-          ]
-        }
-      ]
-    }
-  }
+  "api": {}
 }
