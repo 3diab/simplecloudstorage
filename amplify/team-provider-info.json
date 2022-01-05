@@ -50,13 +50,13 @@
     },
     "categories": {
       "function": {
-        "S3Trigger430ffe51": {
-          "deploymentBucketName": "amplify-simplecloudstorage-dev-10319-deployment",
-          "s3Key": "amplify-builds/S3Trigger430ffe51-317a36776a52494d6b58-build.zip"
-        },
         "simplecloudstoragescslayer": {
           "deploymentBucketName": "amplify-simplecloudstorage-dev-10319-deployment",
           "s3Key": "amplify-builds/simplecloudstoragescslayer-LambdaLayerVersion2b106764-build.zip"
+        },
+        "S3Triggerad8c879d": {
+          "deploymentBucketName": "amplify-simplecloudstorage-dev-10319-deployment",
+          "s3Key": "amplify-builds/S3Triggerad8c879d-62787261355150426156-build.zip"
         }
       },
       "hosting": {

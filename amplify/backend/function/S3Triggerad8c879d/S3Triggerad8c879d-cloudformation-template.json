@@ -34,12 +34,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "S3Trigger430ffe51",
+            "S3Triggerad8c879d",
             {
               "Fn::Join": [
                 "",
                 [
-                  "S3Trigger430ffe51",
+                  "S3Triggerad8c879d",
                   "-",
                   {
                     "Ref": "env"
@@ -71,8 +71,7 @@
           "S3Key": {
             "Ref": "s3Key"
           }
-        },
-        "Layers": []
+        }
       }
     },
     "LambdaExecutionRole": {
@@ -81,12 +80,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "S3Trigger430ffe51LambdaRole430ffe51",
+            "S3Triggerad8c879dLambdaRolead8c879d",
             {
               "Fn::Join": [
                 "",
                 [
-                  "S3Trigger430ffe51LambdaRole430ffe51",
+                  "S3Triggerad8c879dLambdaRolead8c879d",
                   "-",
                   {
                     "Ref": "env"

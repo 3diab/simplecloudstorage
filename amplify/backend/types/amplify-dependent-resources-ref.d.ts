@@ -15,18 +15,18 @@ export type AmplifyDependentResourcesAttributes = {
         }
     },
     "function": {
-        "S3Trigger430ffe51": {
+        "simplecloudstoragescslayer": {
+            "Arn": "string"
+        },
+        "S3Triggerad8c879d": {
             "Name": "string",
             "Arn": "string",
             "Region": "string",
             "LambdaExecutionRole": "string"
-        },
-        "simplecloudstoragescslayer": {
-            "Arn": "string"
         }
     },
     "storage": {
-        "SimpleCloudStaging": {
+        "objectstorage": {
             "BucketName": "string",
             "Region": "string"
         }

@@ -31,18 +31,8 @@ const awsmobile = {
     "aws_cognito_verification_mechanisms": [
         "EMAIL"
     ],
-    "aws_user_files_s3_bucket": "simplecloudstorageefded4746b7146beb038662f439a310319-dev",
-    "aws_user_files_s3_bucket_region": "eu-north-1",
-    "aws_cloud_logic_custom": [
-        {
-            "name": "MakeObjectPublic",
-            "endpoint": "https://3toecrirh7.execute-api.eu-north-1.amazonaws.com/staging",
-            "region": "eu-north-1"
-        }
-    ],
-    "aws_cognito_login_mechanisms": [
-        "EMAIL"
-    ]
+    "aws_user_files_s3_bucket": "simplecloudstoragedc6a98c826504649ab5e9a11b705410319-dev",
+    "aws_user_files_s3_bucket_region": "eu-north-1"
 };
 
 

@@ -44,26 +44,25 @@
     }
   },
   "function": {
-    "S3Trigger430ffe51": {
-      "service": "Lambda",
-      "providerPlugin": "awscloudformation",
-      "build": true,
-      "dependsOn": []
-    },
     "simplecloudstoragescslayer": {
       "providerPlugin": "awscloudformation",
       "service": "LambdaLayer",
       "build": true
+    },
+    "S3Triggerad8c879d": {
+      "service": "Lambda",
+      "providerPlugin": "awscloudformation",
+      "build": true
     }
   },
   "storage": {
-    "SimpleCloudStaging": {
+    "objectstorage": {
       "service": "S3",
       "providerPlugin": "awscloudformation",
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "S3Trigger430ffe51",
+          "resourceName": "S3Triggerad8c879d",
           "attributes": [
             "Name",
             "Arn",
