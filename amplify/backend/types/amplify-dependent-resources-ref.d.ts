@@ -18,7 +18,7 @@ export type AmplifyDependentResourcesAttributes = {
         "simplecloudstoragescslayer": {
             "Arn": "string"
         },
-        "S3Triggerad8c879d": {
+        "S3Triggerb0b093a5": {
             "Name": "string",
             "Arn": "string",
             "Region": "string",
@@ -26,7 +26,7 @@ export type AmplifyDependentResourcesAttributes = {
         }
     },
     "storage": {
-        "objectstorage": {
+        "s37cbd5347": {
             "BucketName": "string",
             "Region": "string"
         }

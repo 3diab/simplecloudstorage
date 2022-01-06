@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "{\"createdOn\":\"Mac\",\"createdBy\":\"Amplify\",\"createdWith\":\"7.6.2\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
+  "Description": "{\"createdOn\":\"Mac\",\"createdBy\":\"Amplify\",\"createdWith\":\"7.6.5\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
   "Parameters": {
     "env": {
       "Type": "String"
@@ -10,6 +10,10 @@
     },
     "s3Key": {
       "Type": "String"
+    },
+    "functionsimplecloudstoragescslayerArn": {
+      "Type": "String",
+      "Default": "functionsimplecloudstoragescslayerArn"
     }
   },
   "Conditions": {
@@ -34,12 +38,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "S3Triggerad8c879d",
+            "S3Triggerb0b093a5",
             {
               "Fn::Join": [
                 "",
                 [
-                  "S3Triggerad8c879d",
+                  "S3Triggerb0b093a5",
                   "-",
                   {
                     "Ref": "env"
@@ -71,7 +75,12 @@
           "S3Key": {
             "Ref": "s3Key"
           }
-        }
+        },
+        "Layers": [
+          {
+            "Fn::Sub": "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:simplecloudstoragescslayer-dev:1"
+          }
+        ]
       }
     },
     "LambdaExecutionRole": {
@@ -80,12 +89,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "S3Triggerad8c879dLambdaRolead8c879d",
+            "S3Triggerb0b093a5LambdaRoleb0b093a5",
             {
               "Fn::Join": [
                 "",
                 [
-                  "S3Triggerad8c879dLambdaRolead8c879d",
+                  "S3Triggerb0b093a5LambdaRoleb0b093a5",
                   "-",
                   {
                     "Ref": "env"

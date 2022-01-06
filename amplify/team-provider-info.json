@@ -54,9 +54,9 @@
           "deploymentBucketName": "amplify-simplecloudstorage-dev-10319-deployment",
           "s3Key": "amplify-builds/simplecloudstoragescslayer-LambdaLayerVersion2b106764-build.zip"
         },
-        "S3Triggerad8c879d": {
+        "S3Triggerb0b093a5": {
           "deploymentBucketName": "amplify-simplecloudstorage-dev-10319-deployment",
-          "s3Key": "amplify-builds/S3Triggerad8c879d-62787261355150426156-build.zip"
+          "s3Key": "amplify-builds/S3Triggerb0b093a5-64624b465646435a3231-build.zip"
         }
       },
       "hosting": {

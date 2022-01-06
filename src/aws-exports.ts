@@ -31,7 +31,7 @@ const awsmobile = {
     "aws_cognito_verification_mechanisms": [
         "EMAIL"
     ],
-    "aws_user_files_s3_bucket": "simplecloudstoragedc6a98c826504649ab5e9a11b705410319-dev",
+    "aws_user_files_s3_bucket": "simplecloudstorage58050f6085164d74a8a30a3732d0410319-dev",
     "aws_user_files_s3_bucket_region": "eu-north-1"
 };
 

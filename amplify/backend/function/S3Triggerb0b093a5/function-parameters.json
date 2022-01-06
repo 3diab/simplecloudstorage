@@ -1,0 +1,11 @@
+{
+  "lambdaLayers": [
+    {
+      "type": "ProjectLayer",
+      "resourceName": "simplecloudstoragescslayer",
+      "env": "dev",
+      "version": 1,
+      "isLatestVersionSelected": false
+    }
+  ]
+}

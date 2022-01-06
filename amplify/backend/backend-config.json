@@ -49,20 +49,29 @@
       "service": "LambdaLayer",
       "build": true
     },
-    "S3Triggerad8c879d": {
+    "S3Triggerb0b093a5": {
       "service": "Lambda",
       "providerPlugin": "awscloudformation",
-      "build": true
+      "build": true,
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "simplecloudstoragescslayer",
+          "attributes": [
+            "Arn"
+          ]
+        }
+      ]
     }
   },
   "storage": {
-    "objectstorage": {
+    "s37cbd5347": {
       "service": "S3",
       "providerPlugin": "awscloudformation",
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "S3Triggerad8c879d",
+          "resourceName": "S3Triggerb0b093a5",
           "attributes": [
             "Name",
             "Arn",
