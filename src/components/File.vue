@@ -224,7 +224,6 @@ export default Vue.extend({
       return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
     },
     handleFileDoubleClick(objectKey: string) {
-      console.log("Double clicked on ", objectKey);
       this.$emit("file-double-click", objectKey);
     },
     handleFileActionClick(action: string, filename: string) {
@@ -266,7 +265,6 @@ export default Vue.extend({
         navigator.clipboard.writeText(signedURL);
         this.$emit("link-copied");
       }
-      console.log(signedURL);
     },
     async getPublicFileUrl() {
       const signedURL = await Storage.get(this.file.__data.key, {
@@ -280,14 +278,27 @@ export default Vue.extend({
     },
     async getPublicAccessState() {
       const result = await this.getPublicFileUrl();
-
-      fetch(result.public, { method: "HEAD" }).then((res) => {
-        if (res.ok) {
+      try {
+        const response = await fetch(result.public, { method: "HEAD" });
+        if (response.ok) {
           this.filePublicStatus = { text: "public", color: "green" };
-        } else if (res.status === 403) {
+        } else if (response.status === 403) {
           this.filePublicStatus = { text: "private", color: "blue-grey" };
         }
-      });
+      } catch (error: any) {
+        console.log("error", error.message);
+      }
+      // try {
+      //   fetch(result.public, { method: "HEAD" }).then((res) => {
+      //     if (res.ok) {
+      //       this.filePublicStatus = { text: "public", color: "green" };
+      //     } else if (res.status === 403) {
+      //       this.filePublicStatus = { text: "private", color: "blue-grey" };
+      //     }
+      //   });
+      // } catch (error: any) {
+      //   console.log("error", error.message);
+      // }
     },
   },
   mounted() {

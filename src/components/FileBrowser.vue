@@ -433,7 +433,6 @@ export default Vue.extend({
           this.$refs.newfolderform as Vue & { validate: () => boolean }
         ).validate()
       ) {
-        //console.log("Validation passed for create folder");
         this.CreateNewFolder();
       }
     },
@@ -446,13 +445,10 @@ export default Vue.extend({
     async CreateNewFolder() {
       if (this.newFolderName === "") return;
       let folderName = this.currentPath + this.newFolderName + "/";
-      // console.log(folderName);
       const result = await Storage.put(folderName, "", { level: "private" });
       this.newFolderName = "";
       this.newFolderDialog = false;
       this.listRemote(this.initPath);
-
-      // console.log(result);
     },
     async StartUpload() {
       if (this.fileList.length === 0) return;
@@ -460,11 +456,10 @@ export default Vue.extend({
       this.fileList.forEach((fileobj) => {
         this.UploadSingleFile(fileobj);
       });
-      // console.log("upload finished");
     },
     async UploadSingleFile(file: File) {
       let fullFileName = this.currentPath + file.name;
-      // console.log("Uploading to:" + fullFileName);
+
       var id = fullFileName; //uuidv4();
       // this.fileUploadProgress[id] = {
       //   filename: file.name,
@@ -484,16 +479,14 @@ export default Vue.extend({
           progressCallback: (progress) => {
             this.fileUploadProgress[id].progress =
               (progress.loaded / progress.total) * 100;
-            // console.log(`Uploaded: ${progress.loaded}/${progress.total}`);
           },
         });
-        // console.log("File uploaded:", result);
+
         Vue.delete(this.fileUploadProgress, result.key);
         if (
           Object.keys(this.fileUploadProgress).length === 0 &&
           this.fileUploadProgress.constructor === Object
         ) {
-          // console.log("File downloadin completed");
           this.fileList = [];
           this.isUploading = false;
           this.uploadDialog = false;
@@ -526,7 +519,6 @@ export default Vue.extend({
 
       this.usedStorage = usedStorage;
       this.$store.commit("Storage/setUsedStorage", usedStorage);
-      // console.log("Used storage", usedStorage / (1024 * 1024));
     },
     processStorageList(results: S3ProviderListOutput) {
       const filesystem: Record<string, any> = {};
@@ -554,7 +546,7 @@ export default Vue.extend({
           delete filesystem[excludedPath];
         }
       });
-      // console.log(filesystem);
+
       return filesystem;
     },
     formatBytes(bytes: number, decimals = 2) {
@@ -596,7 +588,7 @@ export default Vue.extend({
       if (objectKey.slice(-1) === "/") {
         //its a folder so change to that path
         this.navigationHistory.push(this.currentPath);
-        console.warn(this.navigationHistory);
+
         this.currentPath = objectKey;
       }
     },
@@ -605,21 +597,19 @@ export default Vue.extend({
       if (this.navigationHistory.length > 0) {
         const path = this.navigationHistory.pop();
         if (path || path === "") this.currentPath = path;
-        console.warn(this.navigationHistory);
       }
     },
     confirmDelete(filename: string) {
-      console.log("Confirming delete", filename);
       this.deleteDialog = true;
       this.deleteFileName = filename;
     },
     async RemoveRemoteFile(fileName: string) {
       let fullFileName = fileName;
-      // console.log("Full file name :" + fullFileName);
+
       var result = await Storage.remove(fullFileName, { level: "private" });
       this.deleteFileName = "";
       this.deleteDialog = false;
-      // console.log(result);
+
       this.listRemote(this.initPath);
     },
     async DownloadFile(isDownload: boolean, fileName: string) {
@@ -639,12 +629,10 @@ export default Vue.extend({
           url: signedURL,
         };
       }
-      // console.log(signedURL);
     },
   },
   computed: {
     getMultipleState() {
-      // console.log(this.ctrlPressed);
       return this.ctrlPressed;
     },
     getUploadValidity() {
@@ -697,14 +685,11 @@ export default Vue.extend({
         var pathVars = this.currentPath.split("/");
         var currentPathObj = this.remoteFileList;
         for (let index = 0; index < pathVars.length; index++) {
-          console.log(pathVars[index]);
-
           if (pathVars[index] !== "") {
             currentPathObj = currentPathObj[pathVars[index]];
           }
         }
-        // console.log("current path object");
-        //  console.log(JSON.stringify(currentPathObj));
+
         let objCopy = Object.assign({}, currentPathObj);
         delete objCopy.__data;
         return objCopy;
@@ -715,7 +700,7 @@ export default Vue.extend({
         return [{ name: "Public", path: "" }];
       } else {
         var pathVars = this.currentPath.split("/");
-        console.log(pathVars);
+
         var pathArray: Record<string, string>[] = [];
         var tempPath = "";
         pathVars.forEach((path) => {
@@ -724,7 +709,7 @@ export default Vue.extend({
             pathArray.push({ name: path, path: tempPath });
           }
         });
-        console.log(pathArray);
+
         return pathArray;
       }
     },
@@ -736,7 +721,7 @@ export default Vue.extend({
         var filtered = pathVars.filter((dir) => {
           return dir !== "";
         });
-        console.log(filtered);
+
         if (this.navigationHistory.length === 0) {
           return "Home";
         } else {
@@ -747,7 +732,7 @@ export default Vue.extend({
   },
   mounted() {
     this.listRemote(this.initPath);
-    //console.log("Init Path :" + this.initPath);
+
     document.addEventListener(
       "drag",
       function (event) {
