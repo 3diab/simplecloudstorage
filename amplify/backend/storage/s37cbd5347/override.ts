@@ -14,8 +14,7 @@ export function override(resources: AmplifyS3ResourceTemplate) {
           "s3:DeleteObject",
           "s3:PutObjectAcl",
         ],
-        Resource:
-          "arn:aws:s3:::simplecloudstorage58050f6085164d74a8a30a3732d0410319-dev/private/${cognito-identity.amazonaws.com:sub}/*",
+        Resource: `${resources.s3Bucket.attrArn}/private/\${cognito-identity.amazonaws.com:sub}/*`,
       },
     ],
   };
