@@ -51,6 +51,7 @@
       <span>{{ getCurrentDirectory }}</span>
 
       <v-spacer></v-spacer>
+      <v-btn @click="onGenerateManifestAction">Generate Manifest</v-btn>
 
       <v-btn class="mx-3" icon @click="listRemote()">
         <v-icon>mdi-refresh</v-icon></v-btn
@@ -424,6 +425,45 @@ export default Vue.extend({
     },
   },
   methods: {
+    async onGenerateManifestAction() {
+      console.log("Generatin manifest from button action");
+      this.$store.dispatch("Storage/generateManifest", this.currentPath);
+      // const files = await Storage.list(this.currentPath, { level: "private" });
+      // const basePath = this.currentPath;
+      // const rootFiles = files.filter((fileObj) => {
+      //   const expression = new RegExp("^" + basePath);
+
+      //   const filePath = fileObj.key?.replace(expression, "");
+      //   const fileObjParts = filePath?.split("/");
+      //   const partLength = fileObjParts?.length;
+      //   return partLength === 1 || fileObjParts!.pop() === "";
+      // });
+
+      // const manifestData = {
+      //   files: [] as any,
+      // };
+      // // Check if root or else skip
+
+      // for (let i = 0; i < rootFiles.length; i++) {
+      //   const fileObj = rootFiles[i];
+      //   const { key, size, lastModified } = fileObj;
+      //   const urls = (await this.$store.dispatch(
+      //     "Storage/getPublicFileUrl",
+      //     key
+      //   )) as Promise<{ public: string; temporary: string }>;
+      //   //promises.push(urls);
+
+      //   manifestData.files.push({
+      //     path: (await urls).public,
+      //     size,
+      //     lastModified,
+      //   });
+      // }
+
+      // //await Promise.all(promises);
+
+      // console.log(JSON.stringify(manifestData));
+    },
     showLinkSnackbar() {
       this.linkCopiedSnackbar = true;
     },

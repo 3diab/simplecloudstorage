@@ -1,5 +1,5 @@
 import { ActionTree, GetterTree, MutationTree } from "vuex";
-
+import { Storage as LibStorage } from "aws-amplify";
 type State = {
   searchText: string;
   usedStorage: number;
@@ -34,9 +34,58 @@ const actions: ActionTree<State, unknown> = {
       }
     });
   },
-  generateManifest({ commit, rootGetters }) {
-    //get selected file from main and generate manifest
-    const selectedFile = rootGetters["Main/getSelectedFile"];
+
+  async getPublicFileUrl({ commit }, fileName: string) {
+    const signedURL = await LibStorage.get(fileName, {
+      download: false,
+      level: "private",
+    });
+    const publicUrl = signedURL.split("?")[0];
+    return { temporary: signedURL, public: publicUrl };
+
+    //console.log(publicUrl);
+  },
+  async generateManifest({ dispatch }, currentPath: string) {
+    const files = await LibStorage.list(currentPath, { level: "private" });
+    const basePath = currentPath;
+    const rootFiles = files.filter((fileObj) => {
+      const expression = new RegExp("^" + basePath);
+
+      const filePath = fileObj.key?.replace(expression, "");
+      const fileObjParts = filePath?.split("/");
+      const partLength = fileObjParts?.length;
+      return partLength === 1 || fileObjParts!.pop() === "";
+    });
+
+    const manifestData = {
+      files: [] as any,
+    };
+    // Check if root or else skip
+
+    for (let i = 0; i < rootFiles.length; i++) {
+      const fileObj = rootFiles[i];
+      const { key, size, lastModified } = fileObj;
+      const urls = (await dispatch("getPublicFileUrl")) as Promise<{
+        public: string;
+        temporary: string;
+      }>;
+      //promises.push(urls);
+
+      manifestData.files.push({
+        path: (await urls).public,
+        size,
+        lastModified,
+      });
+    }
+
+    // Write manifest to current folder
+    const manifestUrl = currentPath + "manifest.json";
+    await LibStorage.put(manifestUrl, manifestData, {
+      level: "private",
+      contentType: "application/json",
+    });
+
+    console.log(JSON.stringify(manifestData));
   },
 };
 
