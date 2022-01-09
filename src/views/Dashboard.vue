@@ -107,11 +107,55 @@
               <v-col>
                 <span class="text-subtitle-2 blue--text font-weight-medium"
                   >Name</span
+                ><v-btn
+                  icon
+                  color="blue"
+                  x-small
+                  class="ml-2"
+                  @click="setRenameMode(true)"
+                  v-if="!renameMode"
                 >
+                  <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+                <v-btn
+                  icon
+                  color="red"
+                  x-small
+                  class="ml-2"
+                  @click="setRenameMode(false)"
+                  v-if="renameMode"
+                >
+                  <v-icon>mdi-close</v-icon>
+                </v-btn>
+                <v-btn
+                  icon
+                  color="green"
+                  x-small
+                  class="ml-2"
+                  @click="setRenameMode(false)"
+                  v-if="renameMode"
+                >
+                  <v-icon>mdi-check</v-icon>
+                </v-btn>
+
                 <br />
-                <span class="text-subtitle-1 font-weight-bold">
+                <span
+                  class="text-subtitle-1 font-weight-bold"
+                  v-if="!renameMode"
+                >
                   {{ getSelectedFile.__data.key }}</span
                 >
+                <v-textarea
+                  class="mt-3"
+                  rows="1"
+                  solo
+                  outlined
+                  flat
+                  auto-grow
+                  v-model="loadedFileName"
+                  v-if="renameMode"
+                  @blur="setRenameMode(false)"
+                ></v-textarea>
               </v-col>
             </v-row>
 
@@ -190,7 +234,7 @@
             hide-details
             background-color="white"
             prepend-inner-icon="mdi-magnify"
-            disabled
+            v-if="false"
             v-model="searchText"
           ></v-text-field>
         </v-col>
@@ -216,6 +260,8 @@ import Auth from "@aws-amplify/auth";
 export default Vue.extend({
   name: "Dashboard",
   data: () => ({
+    renameMode: false,
+    loadedFileName: "",
     rightSidebar: true,
     leftSidebar: true,
     searchText: "",
@@ -227,15 +273,18 @@ export default Vue.extend({
     ],
   }),
   methods: {
+    setRenameMode(rename: boolean) {
+      this.renameMode = rename;
+      this.loadedFileName = rename
+        ? this.$store.getters["Main/getSelectedFile"].__data.key
+        : "";
+    },
     copyUrl(mode: string) {
-      console.log("copy url");
       if (mode === "public") {
-        console.log("copy public");
         navigator.clipboard.writeText(
           this.$store.getters["Main/getCurrentUrls"].public
         );
       } else {
-        console.log("copy temporary");
         navigator.clipboard.writeText(
           this.$store.getters["Main/getCurrentUrls"].temporary
         );
@@ -311,11 +360,7 @@ export default Vue.extend({
   },
   mounted() {
     this.isMounted = true;
-    Auth.currentAuthenticatedUser({
-      bypassCache: false, // Optional, By default is false. If set to true, this call will send a request to Cognito to get the latest user data
-    }).then((user) => {
-      console.log(user);
-    });
+
     this.$store.dispatch("Storage/getStorageLimit");
   },
 });
