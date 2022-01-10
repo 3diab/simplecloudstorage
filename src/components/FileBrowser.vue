@@ -14,7 +14,7 @@
           <v-btn
             color="green darken-1"
             text
-            @click="RemoveRemoteFile(deleteFileName)"
+            @click="deleteFile(deleteFileName)"
           >
             confirm
           </v-btn>
@@ -473,22 +473,26 @@ export default Vue.extend({
           this.$refs.newfolderform as Vue & { validate: () => boolean }
         ).validate()
       ) {
-        this.CreateNewFolder();
+        this.createNewFolder();
       }
     },
     GoBack() {
       this.$router.back();
     },
     refreshFileList() {
-      this.listRemote(this.currentPath);
+      this.fetchFileList(this.currentPath);
     },
-    async CreateNewFolder() {
+    fetchFileList(path: string) {
+      this.$store.dispatch("Storage/fetchRemoteFileList", path);
+    },
+    async createNewFolder() {
       if (this.newFolderName === "") return;
       let folderName = this.currentPath + this.newFolderName + "/";
-      const result = await Storage.put(folderName, "", { level: "private" });
+      await this.$store.dispatch("Storage/createNewFolder", folderName);
+
       this.newFolderName = "";
       this.newFolderDialog = false;
-      this.listRemote(this.initPath);
+      this.fetchFileList(this.currentPath);
     },
     async StartUpload() {
       if (this.fileList.length === 0) return;
@@ -530,65 +534,14 @@ export default Vue.extend({
           this.fileList = [];
           this.isUploading = false;
           this.uploadDialog = false;
-          this.listRemote(this.initPath);
+          this.fetchFileList(this.currentPath);
         }
         //check results with file id
       } catch (error) {
         console.log("Error uploading file: ", error);
       }
     },
-    listRemote(path = "") {
-      this.isListLoading = true;
-      Storage.list(path, { level: "private" }) // for listing ALL files without prefix, pass '' instead
-        .then((result) => {
-          // console.log(result);
-          this.remoteFileList = this.processStorageList(result);
-          this.getStorageUsage(result);
-          //console.warn(this.remoteFileList);
-          this.currentPath = this.initPath;
-          this.isListLoading = false;
-        })
-        .catch((err) => console.log(err));
-    },
-    getStorageUsage(fileList: Record<string, any>) {
-      let usedStorage = 0;
 
-      fileList.forEach((file: Record<string, any>) => {
-        usedStorage += +file.size;
-      });
-
-      this.usedStorage = usedStorage;
-      this.$store.commit("Storage/setUsedStorage", usedStorage);
-    },
-    processStorageList(results: S3ProviderListOutput) {
-      const filesystem: Record<string, any> = {};
-      // https://stackoverflow.com/questions/44759750/how-can-i-create-a-nested-object-representation-of-a-folder-structure
-      const add = (
-        source: string,
-        target: Record<string, any>,
-        item: S3ProviderListOutputItem
-      ) => {
-        const elements = source.split("/");
-        const element = elements.shift();
-        if (!element) return; // blank
-        target[element] = target[element] || { __data: item }; // element;
-        if (elements.length) {
-          target[element] =
-            typeof target[element] === "object" ? target[element] : {};
-          add(elements.join("/"), target[element], item);
-        }
-      };
-      results.forEach((item) => {
-        if (item.key) add(item.key, filesystem, item);
-      });
-      this.pathExcludes.forEach((excludedPath) => {
-        if (excludedPath !== "") {
-          delete filesystem[excludedPath];
-        }
-      });
-
-      return filesystem;
-    },
     formatBytes(bytes: number, decimals = 2) {
       if (bytes === 0) return "0 Bytes";
       const k = 1024;
@@ -643,32 +596,11 @@ export default Vue.extend({
       this.deleteDialog = true;
       this.deleteFileName = filename;
     },
-    async RemoveRemoteFile(fileName: string) {
-      let fullFileName = fileName;
-
-      var result = await Storage.remove(fullFileName, { level: "private" });
-      this.deleteFileName = "";
+    async deleteFile(fileName: string) {
+      this.$store.dispatch("Storage/deleteRemoteFile", fileName);
       this.deleteDialog = false;
-
-      this.listRemote(this.initPath);
-    },
-    async DownloadFile(isDownload: boolean, fileName: string) {
-      this.copyLinkData = {};
-      const signedURL = await Storage.get(fileName, {
-        download: false,
-        progressCallback(progress) {
-          // console.log(`Downloaded file ${fileName}: ${progress.loaded}/${progress.total}`);
-        },
-      });
-      if (isDownload) {
-        window.open(signedURL, "_blank");
-      } else {
-        this.copyLinkDialog = true;
-        this.copyLinkData = {
-          name: fileName,
-          url: signedURL,
-        };
-      }
+      this.deleteFileName = "";
+      this.fetchFileList(this.currentPath);
     },
   },
   computed: {
@@ -701,29 +633,12 @@ export default Vue.extend({
     },
 
     getFilesAtPath() {
-      const searchText = this.$store.getters["Storage/getSearchText"].trim();
-      // if (searchText === "") {
-      //   let counter = 0;
-
-      //   let deepIterator = (target: Record<string, any>) => {
-      //     counter++;
-      //     console.log(target);
-      //     if (typeof target === "object") {
-      //       for (const key in target) {
-      //         deepIterator(target[key]);
-      //       }
-      //     } else {
-      //       console.log(target);
-      //     }
-      //   };
-      //   deepIterator(this.remoteFileList);
-      //   console.log(searchText);
-      // }
+      const fileList = this.$store.getters["Storage/getProcessedFileList"];
       if (this.currentPath === "") {
-        return this.remoteFileList;
+        return fileList;
       } else {
         var pathVars = this.currentPath.split("/");
-        var currentPathObj = this.remoteFileList;
+        var currentPathObj = fileList;
         for (let index = 0; index < pathVars.length; index++) {
           if (pathVars[index] !== "") {
             currentPathObj = currentPathObj[pathVars[index]];
@@ -771,7 +686,7 @@ export default Vue.extend({
     },
   },
   mounted() {
-    this.listRemote(this.initPath);
+    this.fetchFileList(this.initPath);
 
     document.addEventListener(
       "drag",

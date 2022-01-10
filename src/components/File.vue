@@ -232,10 +232,10 @@ export default Vue.extend({
           this.confirmDelete(filename);
           break;
         case "download":
-          this.DownloadFile(true, filename);
+          this.downloadFile(true, filename);
           break;
         case "getlink":
-          this.DownloadFile(false, filename);
+          this.downloadFile(false, filename);
           break;
       }
     },
@@ -245,23 +245,15 @@ export default Vue.extend({
       // this.deleteFileName = filename;
       this.$emit("delete-file", filename);
     },
-    async DownloadFile(isDownload: boolean, fileName: string) {
+    async downloadFile(isDownload: boolean, fileName: string) {
       this.copyLinkData = {};
-      const signedURL = await Storage.get(fileName, {
-        download: false,
-        level: "private",
-        progressCallback(progress) {
-          // console.log(`Downloaded file ${fileName}: ${progress.loaded}/${progress.total}`);
-        },
+      const signedURL = await this.$store.dispatch("Storage/fetchFile", {
+        isDownload,
+        fileName,
       });
       if (isDownload) {
         window.open(signedURL, "_blank");
       } else {
-        //this.copyLinkDialog = true;
-        // this.copyLinkData = {
-        //   name: fileName,
-        //   url: signedURL,
-        // };
         navigator.clipboard.writeText(signedURL);
         this.$emit("link-copied");
       }
@@ -288,17 +280,6 @@ export default Vue.extend({
       } catch (error: any) {
         console.log("error", error.message);
       }
-      // try {
-      //   fetch(result.public, { method: "HEAD" }).then((res) => {
-      //     if (res.ok) {
-      //       this.filePublicStatus = { text: "public", color: "green" };
-      //     } else if (res.status === 403) {
-      //       this.filePublicStatus = { text: "private", color: "blue-grey" };
-      //     }
-      //   });
-      // } catch (error: any) {
-      //   console.log("error", error.message);
-      // }
     },
   },
   mounted() {

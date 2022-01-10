@@ -132,7 +132,7 @@
                   color="green"
                   x-small
                   class="ml-2"
-                  @click="setRenameMode(false)"
+                  @click="renameObject(getSelectedFile.__data.key)"
                   v-if="renameMode"
                 >
                   <v-icon>mdi-check</v-icon>
@@ -152,7 +152,7 @@
                   outlined
                   flat
                   auto-grow
-                  v-model="loadedFileName"
+                  v-model="editedFileName"
                   v-if="renameMode"
                   @blur="setRenameMode(false)"
                 ></v-textarea>
@@ -261,7 +261,7 @@ export default Vue.extend({
   name: "Dashboard",
   data: () => ({
     renameMode: false,
-    loadedFileName: "",
+    editedFileName: "",
     rightSidebar: true,
     leftSidebar: true,
     searchText: "",
@@ -275,9 +275,15 @@ export default Vue.extend({
   methods: {
     setRenameMode(rename: boolean) {
       this.renameMode = rename;
-      this.loadedFileName = rename
+      this.editedFileName = rename
         ? this.$store.getters["Main/getSelectedFile"].__data.key
         : "";
+    },
+    async renameObject(key: string) {
+      await this.$store.dispatch("Storage/renameObject", {
+        currentKey: key,
+        newKey: this.editedFileName,
+      });
     },
     copyUrl(mode: string) {
       if (mode === "public") {
