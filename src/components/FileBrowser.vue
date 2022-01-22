@@ -51,9 +51,11 @@
       <span>{{ getCurrentDirectory }}</span>
 
       <v-spacer></v-spacer>
-      <v-btn @click="onGenerateManifestAction">Generate Manifest</v-btn>
+      <v-btn v-if="false" @click="onGenerateManifestAction"
+        >Generate Manifest</v-btn
+      >
 
-      <v-btn class="mx-3" icon @click="listRemote()">
+      <v-btn class="mx-3" icon @click="fetchFileList(currentPath)">
         <v-icon>mdi-refresh</v-icon></v-btn
       >
 
@@ -583,6 +585,7 @@ export default Vue.extend({
         this.navigationHistory.push(this.currentPath);
 
         this.currentPath = objectKey;
+        this.$store.commit("Storage/setCurrentPath", this.currentPath);
       }
     },
 
@@ -590,6 +593,7 @@ export default Vue.extend({
       if (this.navigationHistory.length > 0) {
         const path = this.navigationHistory.pop();
         if (path || path === "") this.currentPath = path;
+        this.$store.commit("Storage/setCurrentPath", this.currentPath);
       }
     },
     confirmDelete(filename: string) {
