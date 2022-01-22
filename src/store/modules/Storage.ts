@@ -132,11 +132,15 @@ const actions: ActionTree<State, unknown> = {
   ) {
     const { currentKey, newKey } = payload;
     try {
-      await LibStorage.copy(
+      const copyResponse = await LibStorage.copy(
         { key: currentKey, level: "private" },
         { key: newKey, level: "private" },
         { acl: "public-read" }
       );
+      const deleteResponse = await LibStorage.remove(currentKey, {
+        level: "private",
+      });
+      console.log("Rename Operation :", copyResponse, deleteResponse);
     } catch (error) {
       console.log(error);
     }
@@ -193,6 +197,9 @@ const mutations: MutationTree<State> = {
   },
 };
 const getters: GetterTree<State, unknown> = {
+  getCurrentPath: (state) => {
+    return state.currentPath;
+  },
   getSearchText: (state) => {
     return state.searchText;
   },

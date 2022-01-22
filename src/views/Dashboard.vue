@@ -154,7 +154,6 @@
                   auto-grow
                   v-model="editedFileName"
                   v-if="renameMode"
-                  @blur="setRenameMode(false)"
                 ></v-textarea>
               </v-col>
             </v-row>
@@ -273,17 +272,38 @@ export default Vue.extend({
     ],
   }),
   methods: {
+    getBasePath(fullPath: string) {
+      let nameArray = fullPath.split("/");
+      nameArray.pop();
+      if (nameArray.length > 0) {
+        return nameArray.join("/") + "/";
+      } else {
+        return "";
+      }
+    },
     setRenameMode(rename: boolean) {
       this.renameMode = rename;
       this.editedFileName = rename
         ? this.$store.getters["Main/getSelectedFile"].__data.key
+            .split("/")
+            .pop()
         : "";
     },
     async renameObject(key: string) {
+      console.log("Renaming object", key);
+      const basePath = this.getBasePath(
+        this.$store.getters["Main/getSelectedFile"].__data.key
+      );
+
       await this.$store.dispatch("Storage/renameObject", {
         currentKey: key,
-        newKey: this.editedFileName,
+        newKey: basePath + this.editedFileName,
       });
+      this.$store.dispatch(
+        "Storage/fetchRemoteFileList",
+        this.$store.getters["Storeage/getCurrentPath"]
+      );
+      this.renameMode = false;
     },
     copyUrl(mode: string) {
       if (mode === "public") {
