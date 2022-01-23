@@ -1,4 +1,5 @@
-# simplecloudstorage
+# Simple Cloud Storage
+
 
 ## Project setup
 ```
