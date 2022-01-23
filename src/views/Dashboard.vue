@@ -52,7 +52,8 @@
             <v-row justify="center">
               <v-col>
                 <span class="grey--text text--darken-2 font-weight-medium">
-                  <v-icon class="mr-2 mb-2">mdi-cloud</v-icon> Storage</span
+                  <v-icon color="blue" class="mr-2 mb-2">mdi-cloud</v-icon>
+                  Storage</span
                 >
                 <v-progress-linear
                   color="blue"
@@ -63,15 +64,20 @@
                 <span class="text-body-2 text-center grey--text text--darken-1"
                   >{{ $store.getters["Storage/getFormattedUsedStorage"] }} of
                   {{ $store.getters["Storage/getFormattedStorageLimit"] }}
-                  consumed</span
-                >
+                </span>
               </v-col>
             </v-row>
           </v-container>
         </v-sheet>
 
         <div class="pa-2 mt-4">
-          <v-btn @click="signOut()" block depressed color="grey darken-2" dark>
+          <v-btn
+            @click="signOut()"
+            block
+            depressed
+            color="blue-grey darken-2"
+            dark
+          >
             Logout
           </v-btn>
         </div>
@@ -114,6 +120,7 @@
                   class="ml-2"
                   @click="setRenameMode(true)"
                   v-if="!renameMode"
+                  :disabled="isFolder(getSelectedFile.__data.key)"
                 >
                   <v-icon>mdi-pencil</v-icon>
                 </v-btn>
@@ -268,12 +275,19 @@ export default Vue.extend({
     mainMenuItems: [
       { title: "My Files", icon: "mdi-folder", to: { name: "Browser" } },
 
-      { title: "Help", icon: "mdi-help-box" },
+      { title: "Help", icon: "mdi-help-box", to: { name: "Help" } },
     ],
   }),
   methods: {
+    isFolder(path: string) {
+      return path.slice(-1) === "/";
+    },
     getBasePath(fullPath: string) {
       let nameArray = fullPath.split("/");
+
+      if (this.isFolder(fullPath)) {
+        nameArray = nameArray.slice(0, nameArray.length - 2);
+      }
       nameArray.pop();
       if (nameArray.length > 0) {
         return nameArray.join("/") + "/";
@@ -283,21 +297,28 @@ export default Vue.extend({
     },
     setRenameMode(rename: boolean) {
       this.renameMode = rename;
-      this.editedFileName = rename
-        ? this.$store.getters["Main/getSelectedFile"].__data.key
-            .split("/")
-            .pop()
-        : "";
+      const selectedFile =
+        this.$store.getters["Main/getSelectedFile"].__data.key;
+      const nameArray = selectedFile.split("/");
+
+      if (!this.isFolder(selectedFile)) {
+        this.editedFileName = rename ? nameArray.pop() : "";
+      } else {
+        const folderName = nameArray[nameArray.length - 2];
+        this.editedFileName = folderName;
+      }
     },
     async renameObject(key: string) {
       console.log("Renaming object", key);
       const basePath = this.getBasePath(
         this.$store.getters["Main/getSelectedFile"].__data.key
       );
+      let newKey = basePath + this.editedFileName;
+      if (this.isFolder(key)) newKey = newKey + "/";
 
       await this.$store.dispatch("Storage/renameObject", {
         currentKey: key,
-        newKey: basePath + this.editedFileName,
+        newKey,
       });
       this.$store.dispatch(
         "Storage/fetchRemoteFileList",

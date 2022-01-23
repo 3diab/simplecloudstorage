@@ -6,6 +6,7 @@ import Dashboard from "../views/Dashboard.vue";
 import store from "@/store";
 
 import FileBrowser from "../components/FileBrowser.vue";
+import Help from "../views/Help.vue";
 
 Vue.use(VueRouter);
 
@@ -21,6 +22,11 @@ const routes: Array<RouteConfig> = [
         path: "/",
         name: "Browser",
         component: FileBrowser,
+      },
+      {
+        path: "/help",
+        name: "Help",
+        component: Help,
       },
     ],
   },
