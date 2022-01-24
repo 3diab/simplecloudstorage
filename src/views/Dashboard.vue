@@ -81,6 +81,7 @@
             Logout
           </v-btn>
         </div>
+        <span class="mx-3 text-caption grey--text">version 0.1.0</span>
       </template>
     </v-navigation-drawer>
     <v-navigation-drawer
@@ -161,6 +162,7 @@
                   auto-grow
                   v-model="editedFileName"
                   v-if="renameMode"
+                  @keyup.esc="setRenameMode(false)"
                 ></v-textarea>
               </v-col>
             </v-row>
