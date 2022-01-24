@@ -45,15 +45,15 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some((x) => x.meta.requiresAuth);
 
-  console.log(
-    `Routing from ${from.name} to ${to.name} . [Requires Authentication:${requiresAuth}]`
-  );
+  // console.log(
+  //   `Routing from ${from.name} to ${to.name} . [Requires Authentication:${requiresAuth}]`
+  // );
   if (requiresAuth) {
     Auth.currentAuthenticatedUser({
       bypassCache: false, // Optional, By default is false. If set to true, this call will send a request to Cognito to get the latest user data
     })
       .then((user) => {
-        console.log(user);
+        // console.log(user);
         store.commit("User/setUser", user);
         next();
       })
