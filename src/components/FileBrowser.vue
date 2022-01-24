@@ -254,7 +254,7 @@
       <v-progress-linear
         color="blue lighten-1"
         indeterminate
-        :active="isListLoading"
+        :active="$store.getters['Storage/getFileListLoadingState']"
         height="4"
       ></v-progress-linear>
 

@@ -197,6 +197,9 @@ const mutations: MutationTree<State> = {
   },
 };
 const getters: GetterTree<State, unknown> = {
+  getFileListLoadingState: (state) => {
+    return state.isFileListLoading;
+  },
   getCurrentPath: (state) => {
     return state.currentPath;
   },
