@@ -19,14 +19,11 @@
         "userPoolGroups": {}
       },
       "function": {
-        "S3Trigger430ffe51": {
-          "deploymentBucketName": "amplify-simplecloudstorage-staging-93602-deployment",
-          "s3Key": "amplify-builds/S3Trigger430ffe51-383042584d6b696c4230-build.zip"
-        },
         "makeS3ObjectPublic": {
           "deploymentBucketName": "amplify-simplecloudstorage-staging-93602-deployment",
           "s3Key": "amplify-builds/makeS3ObjectPublic-4156346345484b326569-build.zip"
-        }
+        },
+        "S3Triggerb0b093a5": {}
       },
       "hosting": {
         "amplifyhosting": {

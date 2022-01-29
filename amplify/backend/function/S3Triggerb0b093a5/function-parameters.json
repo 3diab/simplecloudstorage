@@ -3,9 +3,9 @@
     {
       "type": "ProjectLayer",
       "resourceName": "simplecloudstoragescslayer",
-      "env": "dev",
       "version": 1,
-      "isLatestVersionSelected": false
+      "isLatestVersionSelected": false,
+      "env": "dev"
     }
   ]
 }
