@@ -31,9 +31,9 @@
         <v-col cols="2" align-self="center"
           ><v-list-item-title class="grey--text text--darken-1">
             <v-chip
-              v-if="filePublicStatus"
+              v-if="filePublicStatus && !isFolder(file.__data.key)"
               small
-              pill
+              label
               :color="filePublicStatus.color"
               dark
             >
@@ -278,7 +278,7 @@ export default Vue.extend({
           this.filePublicStatus = { text: "private", color: "blue-grey" };
         }
       } catch (error: any) {
-        console.log("error", error.message);
+        // console.log("error", error.message);
       }
     },
   },
