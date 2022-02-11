@@ -1,75 +1,142 @@
 <template>
-  <v-list-item
-    @dblclick="handleFileDoubleClick(file.__data.key)"
-    @click="setSelectedFile()"
-    :ripple="false"
-    @mouseover="hover(true)"
-    @mouseleave="hover(false)"
-  >
-    <v-list-item-avatar size="20" tile>
-      <v-icon class="" :color="getFileType(file.__data.key).color">
-        {{ getFileType(file.__data.key).icon }}
-      </v-icon>
-    </v-list-item-avatar>
-    <v-list-item-content>
-      <v-row>
-        <v-col cols="4" align-self="center"
-          ><v-list-item-title
-            class="
-              text-subtitle-1
-              font-weight-regular
-              grey--text
-              text--darken-2
-            "
-            >{{
-              isFolder(file.__data.key)
-                ? file.__data.key.slice(0, -1).split("/").pop()
-                : file.__data.key.split("/").pop()
-            }}</v-list-item-title
-          ></v-col
-        >
-        <v-col cols="2" align-self="center"
-          ><v-list-item-title class="grey--text text--darken-1">
-            <v-chip
-              v-if="filePublicStatus && !isFolder(file.__data.key)"
-              small
-              label
-              :color="filePublicStatus.color"
-              dark
-            >
-              {{ filePublicStatus.text }}
-            </v-chip>
-          </v-list-item-title>
-        </v-col>
-        <v-col cols="2" align-self="center"
-          ><v-list-item-title class="grey--text text--darken-1"
-            >{{ formatBytes(file.__data.size) }}
-          </v-list-item-title>
-        </v-col>
-        <v-col cols="2" align-self="center"
-          ><v-list-item-title class="grey--text text--darken-1"
-            >{{ getFileType(file.__data.key).desc }}
-          </v-list-item-title>
-        </v-col>
-        <v-col cols="2" align-self="center">
-          <v-row>
-            <v-btn
-              icon
-              v-for="(contextItem, i) in contextMenuItems"
-              :key="i"
-              :disabled="!isFolderEmpty(file)"
-              v-show="fileHoverState"
-              @click="
-                handleFileActionClick(contextItem.action, file.__data.key)
+  <div>
+    <v-dialog v-model="copyDialogState" width="400">
+      <v-card loading="$store.getters['Storage/getFileCopyProgressState']">
+        <v-card-title class="text-h6"> Copy File </v-card-title>
+        <v-divider></v-divider>
+
+        <v-card-text>
+          <v-sheet flat color="grey lighten-4" class="my-3 py-1" rounded="lg">
+            <span class="text-subtitle-1 mx-6">
+              {{ file.__data.key }}
+            </span>
+          </v-sheet>
+          <v-sheet flat color="grey lighten-4" class="my-3 py-1" rounded="lg">
+            <span class="text-subtitle-1 mx-6">
+              {{ copyFileDestination }}
+            </span>
+          </v-sheet>
+
+          <span>Choose destination folder</span>
+          <v-sheet outlined class="overflow-auto mt-3" rounded="lg">
+            <v-list dense>
+              <v-list-item-group
+                v-model="selectedFolder"
+                @change="folderSelected()"
+              >
+                <v-list-item v-for="(item, i) in folderList" :key="i">
+                  <v-list-item-icon>
+                    <v-icon color="blue">mdi-folder</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-content>
+                    <v-list-item-title v-text="item.key"></v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list-item-group>
+            </v-list>
+          </v-sheet>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn color="red darken-1" text @click="copyDialogState = false">
+            Cancel
+          </v-btn>
+
+          <v-btn color="green darken-1" text @click="performFileCopy()">
+            Copy
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-list-item
+      @dblclick="handleFileDoubleClick(file.__data.key)"
+      @click="setSelectedFile()"
+      :ripple="false"
+      @mouseover="hover(true)"
+      @mouseleave="hover(false)"
+    >
+      <v-list-item-avatar size="20" tile>
+        <v-icon class="" :color="getFileType(file.__data.key).color">
+          {{ getFileType(file.__data.key).icon }}
+        </v-icon>
+      </v-list-item-avatar>
+      <v-list-item-content>
+        <v-row>
+          <v-col cols="4" align-self="center"
+            ><v-list-item-title
+              class="
+                text-subtitle-1
+                font-weight-regular
+                grey--text
+                text--darken-2
               "
-            >
-              <v-icon dark>{{ contextItem.icon }}</v-icon>
-            </v-btn>
-          </v-row>
-        </v-col>
-      </v-row>
-    </v-list-item-content>
-  </v-list-item>
+              >{{
+                isFolder(file.__data.key)
+                  ? file.__data.key.slice(0, -1).split("/").pop()
+                  : file.__data.key.split("/").pop()
+              }}</v-list-item-title
+            ></v-col
+          >
+          <v-col cols="2" align-self="center"
+            ><v-list-item-title class="grey--text text--darken-1">
+              <v-chip
+                v-if="filePublicStatus && !isFolder(file.__data.key)"
+                small
+                label
+                :color="filePublicStatus.color"
+                dark
+              >
+                {{ filePublicStatus.text }}
+              </v-chip>
+            </v-list-item-title>
+          </v-col>
+          <v-col cols="2" align-self="center"
+            ><v-list-item-title class="grey--text text--darken-1"
+              >{{ formatBytes(file.__data.size) }}
+            </v-list-item-title>
+          </v-col>
+          <v-col cols="2" align-self="center"
+            ><v-list-item-title class="grey--text text--darken-1"
+              >{{ getFileType(file.__data.key).desc }}
+            </v-list-item-title>
+          </v-col>
+          <v-col cols="2" align-self="center">
+            <v-row>
+              <v-menu offset-y>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    icon
+                    v-bind="attrs"
+                    v-on="on"
+                    v-show="fileHoverState"
+                    :disabled="!isFolderEmpty(file)"
+                  >
+                    <v-icon>mdi-dots-vertical</v-icon>
+                  </v-btn>
+                </template>
+                <v-list dense>
+                  <v-list-item
+                    v-for="(item, index) in contextMenuItems"
+                    :key="index"
+                    @click="handleFileActionClick(item.action, file.__data.key)"
+                  >
+                    <v-list-item-icon class="mr-3">
+                      <v-icon v-text="item.icon"></v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                      <v-list-item-title>{{ item.text }}</v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </v-row>
+          </v-col>
+        </v-row>
+      </v-list-item-content>
+    </v-list-item>
+  </div>
 </template>
 <script lang="ts">
 import Vue, { PropType } from "vue";
@@ -83,6 +150,11 @@ export default Vue.extend({
   },
   data: () => ({
     fileHoverState: false,
+    copyDialogState: false,
+    selectedFolder: -1,
+    copyFileSource: "",
+    copyFileDestination: "",
+    folderList: [] as any,
     fileTypes: {
       txt: {
         desc: "Text document",
@@ -153,6 +225,11 @@ export default Vue.extend({
         text: "Get Link",
         icon: "mdi-link-variant",
         action: "getlink",
+      },
+      {
+        text: "Copy File",
+        icon: "mdi-content-copy",
+        action: "copyfile",
       },
     ],
     copyLinkDialog: false,
@@ -237,6 +314,9 @@ export default Vue.extend({
         case "getlink":
           this.downloadFile(false, filename);
           break;
+        case "copyfile":
+          this.copyFile();
+          break;
       }
     },
     confirmDelete(filename: string) {
@@ -244,6 +324,10 @@ export default Vue.extend({
       // this.deleteDialog = true;
       // this.deleteFileName = filename;
       this.$emit("delete-file", filename);
+    },
+    async copyFile() {
+      console.log("copy file");
+      this.copyDialogState = true;
     },
     async downloadFile(isDownload: boolean, fileName: string) {
       this.copyLinkData = {};
@@ -281,9 +365,42 @@ export default Vue.extend({
         // console.log("error", error.message);
       }
     },
+    getFolderList() {
+      const fileList = this.$store.getters["Storage/getRawFileList"];
+
+      const folderList = fileList.filter((file: any) =>
+        this.isFolder(file.key)
+      );
+      folderList.unshift({ key: "/" });
+
+      return folderList;
+    },
+    folderSelected() {
+      console.log(this.folderList[this.selectedFolder]);
+
+      const selectedFolderPath = this.folderList[this.selectedFolder].key;
+      this.copyFileSource = this.file.__data.key;
+      const sourceFileName = this.file.__data.key.split("/").pop();
+      if (selectedFolderPath === "/") {
+        this.copyFileDestination = sourceFileName;
+      } else {
+        this.copyFileDestination = selectedFolderPath + sourceFileName;
+      }
+    },
+    async performFileCopy() {
+      if (this.copyFileSource && this.copyFileDestination) {
+        await this.$store.dispatch("Storage/copyFile", {
+          source: this.copyFileSource,
+          destination: this.copyFileDestination,
+        });
+        this.copyDialogState = false;
+      }
+    },
   },
+
   mounted() {
     this.getPublicAccessState();
+    this.folderList = this.getFolderList();
     //console.log("file", this.file);
   },
 });
