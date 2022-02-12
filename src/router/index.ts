@@ -19,7 +19,7 @@ const routes: Array<RouteConfig> = [
     },
     children: [
       {
-        path: "/",
+        path: "/browser",
         name: "Browser",
         component: FileBrowser,
       },
