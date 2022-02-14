@@ -485,7 +485,7 @@ export default Vue.extend({
       this.fetchFileList(this.currentPath);
     },
     fetchFileList(path: string) {
-      this.$store.dispatch("Storage/fetchRemoteFileList", path);
+      this.$store.dispatch("Storage/fetchRemoteFileList", "");
     },
     async createNewFolder() {
       if (this.newFolderName === "") return;
