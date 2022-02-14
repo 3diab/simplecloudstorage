@@ -19,7 +19,7 @@ const routes: Array<RouteConfig> = [
     },
     children: [
       {
-        path: "/",
+        path: "/browser",
         name: "Browser",
         component: FileBrowser,
       },
@@ -38,6 +38,7 @@ const routes: Array<RouteConfig> = [
 ];
 
 const router = new VueRouter({
+  mode: "history",
   routes,
 });
 

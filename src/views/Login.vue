@@ -18,7 +18,7 @@
           <v-card
             max-width="450"
             class="mx-auto"
-            rounded="xl"
+            rounded="lg"
             flat
             :loading="$store.getters['User/getLoginProgressState']"
           >

@@ -11,10 +11,12 @@ type State = {
   storageLimit: number;
   currentPath: string;
   isFileListLoading: boolean;
+  fileCopyProgress: boolean;
   rawFileList: Record<string, any>;
   processedFileList: Record<string, any>;
 };
 const state: State = {
+  fileCopyProgress: false,
   searchText: "",
   usedStorage: 0,
   storageLimit: 1024 * 1024 * 1024,
@@ -126,6 +128,23 @@ const actions: ActionTree<State, unknown> = {
 
     console.log(JSON.stringify(manifestData));
   },
+  async copyFile({ commit }, payload: { source: string; destination: string }) {
+    const { source, destination } = payload;
+    console.log("copying", payload);
+
+    try {
+      commit("setFileCopyProgressState", true);
+      const copyResponse = await LibStorage.copy(
+        { key: source, level: "private" },
+        { key: destination, level: "private" },
+        { acl: "public-read" }
+      );
+      commit("setFileCopyProgressState", false);
+    } catch (error) {
+      console.log(error);
+      commit("setFileCopyProgressState", false);
+    }
+  },
   async renameObject(
     { commit },
     payload: { currentKey: string; newKey: string }
@@ -195,8 +214,14 @@ const mutations: MutationTree<State> = {
   setIsFileListLoadingState(state, loadingState: boolean) {
     state.isFileListLoading = loadingState;
   },
+  setFileCopyProgressState(state, copyProgressState) {
+    state.fileCopyProgress = copyProgressState;
+  },
 };
 const getters: GetterTree<State, unknown> = {
+  getFileCopyProgressState: (state) => {
+    return state.fileCopyProgress;
+  },
   getFileListLoadingState: (state) => {
     return state.isFileListLoading;
   },
@@ -226,6 +251,9 @@ const getters: GetterTree<State, unknown> = {
   },
   getProcessedFileList: (state) => {
     return state.processedFileList;
+  },
+  getRawFileList: (state) => {
+    return state.rawFileList;
   },
 };
 

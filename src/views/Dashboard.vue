@@ -90,6 +90,7 @@
       right
       v-model="getRightSidebarState"
       disable-resize-watcher
+      hide-overlay
     >
       <v-card flat tile>
         <v-card-title
@@ -372,7 +373,7 @@ export default Vue.extend({
       }
     },
 
-    getPreviewUrl() {
+    getPreviewUrl(): { category: string; url: string } {
       const selectedFile = this.$store.getters["Main/getSelectedFile"];
       const urlObject = { category: "", url: "" };
 
@@ -403,7 +404,7 @@ export default Vue.extend({
             return urlObject;
         }
       } else {
-        return "";
+        return { category: "", url: "" };
       }
     },
   },
