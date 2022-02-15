@@ -1,5 +1,5 @@
 <template>
-  <file-browser :initPath="initPath"></file-browser>
+  <file-browser initPath=""></file-browser>
 </template>
 
 <script lang="ts">
