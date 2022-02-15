@@ -35,6 +35,7 @@ const actions: ActionTree<State, unknown> = {
     commit("setIsFileListLoadingState", true);
     try {
       const result = await LibStorage.list(path, { level: "private" });
+
       commit("setRawFileList", result);
       const processedFileList = processStorageList(result);
       commit("setProcessedFileList", processedFileList);
