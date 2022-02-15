@@ -83,20 +83,22 @@
             </v-btn>
           </v-card-title>
           <v-divider></v-divider>
-
           <v-card-text>
             <v-container>
               <v-form
                 ref="newfolderform"
                 lazy-validation
                 v-model="newFolderNameValid"
+                @submit.prevent=""
               >
                 <v-text-field
+                  autofocus
                   v-model="newFolderName"
                   outlined
                   dense
                   class="mt-5"
                   :rules="folderNameRules"
+                  @keypress.enter="validateNewFolderName()"
                 ></v-text-field>
               </v-form>
             </v-container>
@@ -690,6 +692,8 @@ export default Vue.extend({
     },
   },
   mounted() {
+    console.log("initpath", this.initPath);
+
     this.fetchFileList(this.initPath);
 
     document.addEventListener(
