@@ -14,19 +14,8 @@ export type AmplifyDependentResourcesAttributes = {
             "CreatedSNSRole": "string"
         }
     },
-    "function": {
-        "simplecloudstoragescslayer": {
-            "Arn": "string"
-        },
-        "S3Triggerb0b093a5": {
-            "Name": "string",
-            "Arn": "string",
-            "Region": "string",
-            "LambdaExecutionRole": "string"
-        }
-    },
     "storage": {
-        "s37cbd5347": {
+        "s39fa42884": {
             "BucketName": "string",
             "Region": "string"
         }

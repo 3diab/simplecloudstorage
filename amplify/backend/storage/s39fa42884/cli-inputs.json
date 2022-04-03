@@ -1,0 +1,13 @@
+{
+  "resourceName": "s39fa42884",
+  "policyUUID": "9fa42884",
+  "bucketName": "simplecloudstorageba8fe3bb74444c36a1069819656cd",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE"
+}
