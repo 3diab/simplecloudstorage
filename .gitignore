@@ -23,7 +23,7 @@ pnpm-debug.log*
 *.sw?
 
 #ignore team provider info
-amplify/backend/team-provider-info.json
+amplify/team-provider-info.json
 
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
