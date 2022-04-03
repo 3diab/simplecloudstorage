@@ -22,6 +22,10 @@ pnpm-debug.log*
 *.sln
 *.sw?
 
+#ignore aws-exports files
+src/aws-exports.ts
+src/aws-exports.js
+
 #ignore team provider info
 amplify/team-provider-info.json
 
