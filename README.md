@@ -49,7 +49,7 @@ Run `` amplify publish `` to build and deploy the app on amplify hosting. It wil
 
 Alternatively you can also self host the build files (contents of the dist folder) on your own server as well. You can host the same app at multiple servers , but will be using same backend.
 
-## 5. Managing the amplify app
+## 5. Adding users to manage app backend
 
 Amplify allows to manage the backend through a web console. To access it use the follwing command:
 ```
@@ -74,6 +74,8 @@ You can also define the access level of the user, in this dialog.
 After the user is added rerun the ``amplify console`` command and choose ``Amplify Console``. Sign into amplify console.
 
 <img width="546" alt="Screenshot 2022-04-04 at 11 36 42 AM" src="https://user-images.githubusercontent.com/70580184/161484018-9f2f5d3f-b831-424e-865a-eb8e3c3032f5.png">
+
+
 
 
 
