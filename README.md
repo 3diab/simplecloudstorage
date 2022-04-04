@@ -63,6 +63,19 @@ This will present with two options:
 For adding users to manage the backend, select ``AWS Console`` . This will open aws console for managing amplify settings.
 Sign in  to the console and select Amplify studio settings.
 
+<img width="1317" alt="Screenshot 2022-04-03 at 11 10 55 PM" src="https://user-images.githubusercontent.com/70580184/161483064-a5125ac0-b197-495b-94e8-7aebd24e3fa4.png">
+
+Press 'Invite Users' button to add new users.
+
+<img width="605" alt="Screenshot 2022-04-03 at 11 11 28 PM" src="https://user-images.githubusercontent.com/70580184/161483132-416f7773-4567-4759-94e3-eae016d810ad.png">
+
+You can also define the access level of the user, in this dialog.
+
+After the user is added rerun the ``amplify console`` command and choose ``Amplify Console``. Sign into amplify console.
+
+<img width="546" alt="Screenshot 2022-04-04 at 11 36 42 AM" src="https://user-images.githubusercontent.com/70580184/161484018-9f2f5d3f-b831-424e-865a-eb8e3c3032f5.png">
+
+
 
 
 ```diff
