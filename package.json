@@ -1,6 +1,6 @@
 {
   "name": "Open-AR-Cloud-Storage",
-  "version": "0.1.0-beta-02",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
