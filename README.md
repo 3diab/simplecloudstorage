@@ -78,18 +78,24 @@ After the user is added rerun the ``amplify console`` command and choose ``Ampli
 ## 6. Configuring user storage quotas
 
 By default each user has 1 GB of storage available. The storage quota is allocated by adding user to special user groups.
-In order to create and add users to quotas, first we need to create user groups in the amplify console.
+In order to create and add users to quotas, first we need to create user groups in the amplify console. Log into amplify console and select ``User Management``. Select `` Groups`` tab and Create group.
+<img width="1111" alt="Screenshot 2022-04-05 at 12 25 45 PM" src="https://user-images.githubusercontent.com/70580184/161696942-767ea592-115b-4a37-93fe-04638a5896ca.png">
 
+### Quota Group nameing.
+Quota group name has to follow this format:
 
-
+``` 
+__storage__[storage size in bytes]
+For example:
+1 GB Quota - __storage__1024*1024*1024
+5 GB Quota - __storage__1024*1024*1024*5
+1 TB Quota - __storage__1024*1024*1024*1024
+```
+For alloting quota to a user, add the user to specific quota group. For this select the ``Users`` tab in user management and add user to group.
 
 ```diff
 - This is an open file sharing platform, anyone with the files public url can download the file. 
 - Do not use this to host confidential files
 ```
-
-
-
-
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
