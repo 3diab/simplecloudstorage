@@ -15,7 +15,7 @@ Make a local copy of the repository using git. Run the following command in the 
 ```
 git clone https://github.com/3diab/simplecloudstorage.git
 ```
-If you have forked this repo, use the link of that repository insted.
+If you want to customize the app/backend the best way is to fork the repsitory and clone that instead.
 
 ## 2. Initialize the project
 
@@ -98,5 +98,4 @@ For alloting quota to a user, add the user to specific quota group. For this sel
 - This is an open file sharing platform, anyone with the files public url can download the file. 
 - Do not use this to host confidential files
 ```
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+
