@@ -79,6 +79,7 @@ After the user is added rerun the ``amplify console`` command and choose ``Ampli
 
 By default each user has 1 GB of storage available. The storage quota is allocated by adding user to special user groups.
 In order to create and add users to quotas, first we need to create user groups in the amplify console. Log into amplify console and select ``User Management``. Select `` Groups`` tab and Create group.
+
 <img width="1111" alt="Screenshot 2022-04-05 at 12 25 45 PM" src="https://user-images.githubusercontent.com/70580184/161696942-767ea592-115b-4a37-93fe-04638a5896ca.png">
 
 ### Quota Group nameing.
