@@ -38,7 +38,7 @@ Next, use amplify push command to provision the resource and build the backend
 amplify push
 ```
 
-This command also generates necessary configuration files in the project as well. The configuration settings are contained in ``src/aws-exports.js``. Since our project is in javascript , rename the file as ``aws-exports.ts``.
+This command also generates necessary configuration files in the project as well. The configuration settings are contained in ``src/aws-exports.js``. Since our project is in typescript , rename the file as ``aws-exports.ts``.
 
 ## 4. Building and deploying the frontend app
 
